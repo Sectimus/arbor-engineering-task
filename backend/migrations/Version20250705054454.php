@@ -7,11 +7,11 @@ namespace Acme\Migrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20250705054453 extends AbstractMigration
+final class Version20250705054454 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Create the initial Word entity';
+        return 'Create the initial Prompt entity';
     }
 
     /*
@@ -21,9 +21,9 @@ final class Version20250705054453 extends AbstractMigration
     {
         // TODO create an index against the words
         $this->addSql(<<<'SQL'
-            CREATE TABLE word (
+            CREATE TABLE prompt (
                 id INT AUTO_INCREMENT NOT NULL, 
-                term VARCHAR(45) NOT NULL, 
+                text VARCHAR(45) NOT NULL, 
                 lang VARCHAR(2) NOT NULL, 
                 PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
@@ -32,7 +32,7 @@ final class Version20250705054453 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql(<<<'SQL'
-            DROP TABLE word
+            DROP TABLE prompt
         SQL);
     }
 }
