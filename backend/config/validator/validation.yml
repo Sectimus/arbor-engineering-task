@@ -1,0 +1,28 @@
+# config/validator/validation.yaml
+# Perhaps validation for length of leader etc.
+# Acme\CountUp\Entity\Track:
+#     properties:
+#         id:
+#             - Blank:
+#                   groups: [Create]
+#             - NotBlank:
+#                   groups: [Update]
+#         title:
+#             - Length:
+#                   min: 2
+#                   max: 255
+#                   minMessage: "Title must be at least {{ limit }} characters long."
+#                   maxMessage: "Title cannot be longer than {{ limit }} characters."
+
+#             - NotBlank: ~
+#         artist:
+#             - Length:
+#                   max: 255
+#                   maxMessage: "Artist name cannot be longer than {{ limit }} characters."
+
+#             - NotBlank: ~
+#         duration:
+#             - NotBlank: ~
+#         isrc:
+#             - NotBlank: ~
+#             - Acme\CountUp\Validator\Constraint\Isrc: ~
