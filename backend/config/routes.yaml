@@ -1,0 +1,10 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: Acme\CountUp\Controller
+    type: attribute
+
+api_challenge_get:
+    path: /api/challenge
+    controller: Acme\CountUp\Controller\GameController::getChallenge
+    methods: [GET]

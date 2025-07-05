@@ -1,0 +1,5 @@
+# config/packages/serializer.yaml
+framework:
+    serializer:
+        default_context:
+            allow_extra_attributes: true

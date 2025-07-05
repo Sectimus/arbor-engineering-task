@@ -1,0 +1,6 @@
+docker-compose.override.yml
+
+#extras
+notes.txt
+Todo.txt
+frontend/

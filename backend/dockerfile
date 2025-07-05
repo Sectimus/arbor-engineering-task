@@ -1,0 +1,37 @@
+FROM php:8.1-fpm-alpine
+# Starts with root
+WORKDIR /var/www/countup
+
+COPY . .
+
+COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+# Xdebug
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && pecl install xdebug-3.1.0 \
+    && docker-php-ext-enable xdebug \
+    && apk del -f .build-deps
+
+RUN apk add \
+    git \
+    unzip \
+    libzip-dev \
+    iputils-ping \
+    && docker-php-ext-install zip pdo pdo_mysql
+
+# Install and init Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Create a home for our little user :)
+RUN mkdir -p /home/www-data
+RUN chown -R www-data:www-data /home/www-data
+
+# Change the composer cache directory to use the user's home
+ENV COMPOSER_CACHE_DIR=/home/www-data/var/.composer/cache
+
+# We don't need root anymore
+RUN chown -R www-data:www-data /var/www/countup
+USER www-data
+WORKDIR /var/www/countup
+
+ENTRYPOINT [ "/bin/sh", "container-entrypoint.sh" ]

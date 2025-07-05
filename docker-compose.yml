@@ -1,0 +1,66 @@
+services:
+  backend:
+    container_name: countup_php_fpm
+    depends_on:
+      - database
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    volumes:
+      - ./backend:/var/www/countup
+    environment:
+      # Required for Xdebug to communicate with us outside the container.
+      XDEBUG_CONFIG: "client_host=host.docker.internal"
+    networks:
+      - countup_network
+
+  database:
+    container_name: countup_mysql
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: countup
+      MYSQL_USER: countup_user
+      MYSQL_PASSWORD: countup_password
+      MYSQL_ROOT_PASSWORD: Tr4ck4ppR0~0tP@55w0rd
+    volumes:
+      - countup_mysql_data:/var/lib/mysql
+    networks:
+      - countup_network
+
+  webserver:
+    container_name: countup_nginx
+    depends_on:
+      - backend
+      - frontend
+    image: nginx:latest
+    # You may have to override these values if you have privileged ports (<1024) and running docker in rootless mode
+    ports:
+      - 80:80
+      - 443:443
+      # - 5173:5173 # Vite development server port
+    volumes:
+      - ./backend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - countup_network
+
+  frontend:
+    container_name: countup_node
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    volumes:
+      - ./frontend:/var/www/countup
+    ports:
+      - 5173:5173 # Vite development server port
+    networks:
+      - countup_network
+
+volumes:
+  countup_mysql_data:
+
+networks:
+  countup_network:
+    driver: bridge
+    name: countup_network
