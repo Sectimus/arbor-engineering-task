@@ -1,0 +1,15 @@
+{
+    "phpstan.paths": {
+        "/home/sectimus/code/code-tests/arbor-engineering-task/backend": "/var/www/countup"
+    },
+    "phpstan.binCommand": [
+        "docker",
+        "exec",
+        "countup_php_fpm",
+        "/var/www/countup/vendor/bin/phpstan",
+    ],
+    "phpstan.enabled": true,
+    "editor.suggest.preview": false,
+}
+
+
