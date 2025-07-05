@@ -3,17 +3,18 @@
 namespace Acme\CountUp\Repository;
 
 use Acme\CountUp\Entity\Champion;
+use Acme\CountUp\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * @extends ServiceEntityRepository<Dictionary>
+ * @extends EntityRepository<Word>
  */
-class DictionaryRepository extends EntityRepository
+class WordRepository extends EntityRepository
 {
     public function __construct(EntityManagerInterface $em)
     {
-        parent::__construct($em, $em->getClassMetadata(Champion::class));
+        parent::__construct($em, $em->getClassMetadata(Word::class));
     }
 
     public function save(Champion $track, bool $flush = false): void

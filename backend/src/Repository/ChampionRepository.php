@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * @extends ServiceEntityRepository<Champion>
+ * @extends EntityRepository<Champion>
  */
 class ChampionRepository extends EntityRepository
 {

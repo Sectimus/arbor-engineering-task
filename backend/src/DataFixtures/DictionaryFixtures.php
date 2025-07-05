@@ -2,7 +2,7 @@
 
 namespace Acme\CountUp\DataFixtures;
 
-use Acme\CountUp\Entity\Phrase;
+use Acme\CountUp\Entity\Word;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectManager;
@@ -16,17 +16,17 @@ class DictionaryFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        // Load english (en) alpha dictionary into DB
+        // Load english (en) alpha dictionary terms into DB
         $handle = fopen(__DIR__ . '/data/alpha_dictionaries/en.txt', 'r');
         if ($handle) {
             $count = 0;
     
             while (($line = fgets($handle)) !== false) {
-                $word = trim($line);
-                if (!empty($word)) {
-                    $phrase = new Phrase();
-                    $phrase->setLang('en')->setWord($word);
-                    $manager->persist($phrase);
+                $term = trim($line);
+                if (!empty($term)) {
+                    $word = new Word();
+                    $word->setLang('en')->setTerm($term);
+                    $manager->persist($word);
                     
                     $count++;
                     if ($count === self::IMPORT_BATCH_SIZE) {

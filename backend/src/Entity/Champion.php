@@ -25,6 +25,12 @@ final class Champion
         return $this->id;
     }
 
+    protected function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;

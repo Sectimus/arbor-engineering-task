@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
-use Acme\CountUp\Entity\Track;
+use Acme\CountUp\Entity\Champion;
 
 class LeaderboardService
 {
@@ -13,9 +13,9 @@ class LeaderboardService
     /**
      * Retrieves all tracks from the repository.
      *
-     * @return Track[] An array of Track entities.
+     * @return Champion[] An array of leaderboard entries.
      */
-    public function getAllTracks(): array
+    public function getLeadboard(): array
     {
         return [];
     }

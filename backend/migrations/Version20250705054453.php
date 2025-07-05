@@ -11,19 +11,19 @@ final class Version20250705054453 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Create the initial Phrase entity';
+        return 'Create the initial Word entity';
     }
 
     /*
-    * pneumonoultramicroscopicsilicovolcanoconiosis is known to be the longest phrase (45 characters) in a standard english dictionary
+    * pneumonoultramicroscopicsilicovolcanoconiosis is known to be the longest word (45 characters) in a standard english dictionary
     */
     public function up(Schema $schema): void
     {
-        // TODO create an index against the phrases
+        // TODO create an index against the words
         $this->addSql(<<<'SQL'
-            CREATE TABLE phrase (
+            CREATE TABLE word (
                 id INT AUTO_INCREMENT NOT NULL, 
-                word VARCHAR(45) NOT NULL, 
+                term VARCHAR(45) NOT NULL, 
                 lang VARCHAR(2) NOT NULL, 
                 PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);

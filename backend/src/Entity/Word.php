@@ -6,7 +6,7 @@ namespace Acme\CountUp\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-final class Phrase
+final class Word
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -14,7 +14,7 @@ final class Phrase
     private ?int $id = null;
 
     #[ORM\Column(length: 45)]
-    private string $word;
+    private string $term;
 
     #[ORM\Column(length: 2)]
     private string $lang;
@@ -24,14 +24,20 @@ final class Phrase
         return $this->id;
     }
 
-    public function getWord(): string
+    protected function setId(int $id): self
     {
-        return $this->word;
+        $this->id = $id;
+        return $this;
     }
 
-    public function setWord(string $word): self
+    public function getTerm(): string
     {
-        $this->word = $word;
+        return $this->term;
+    }
+
+    public function setTerm(string $term): self
+    {
+        $this->term = $term;
         return $this;
     }
 
