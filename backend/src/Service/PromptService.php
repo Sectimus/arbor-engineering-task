@@ -14,6 +14,12 @@ class PromptService implements PromptServiceInterface{
     )
     {}
 
+    public function isValidDictionaryWord(string $word): bool { 
+        $word = $this->wordRepository->findOneBy(['term' => $word]);
+
+        return $word !== null;
+    }
+
     public function generatePrompt(): Prompt { 
         $seed = $this->wordRepository->getRandomWord();
 

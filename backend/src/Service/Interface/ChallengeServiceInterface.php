@@ -10,5 +10,5 @@ interface ChallengeServiceInterface
 {
     public function createChallenge(Prompt $prompt): Challenge;
 
-    public function submitChallenge(Challenge $prompt, string $answer): Challenge;
+    public function submitChallenge(Challenge $challenge, string $answer): Challenge;
 }

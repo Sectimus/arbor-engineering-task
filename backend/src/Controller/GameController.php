@@ -4,9 +4,14 @@ declare(strict_types=1);
 namespace Acme\CountUp\Controller;
 
 use Acme\CountUp\Entity\Challenge;
+use Acme\CountUp\Entity\CharFrequency;
+use Acme\CountUp\Exception\ChallengeException;
+use Acme\CountUp\Exception\InvalidDictionaryWordException;
+use Acme\CountUp\Exception\NotEnoughCharsException;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
 use Acme\CountUp\Service\Interface\PromptServiceInterface;
 use Exception;
+use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -59,13 +64,32 @@ class GameController extends AbstractController
         if($answer === null){
             throw new Exception("'answer' should be provided but is missing");
         }
+        if(!is_string($answer)){
+            //TODO: handle numerical answers or answers with punctuation (any non (A-Z)).
+            throw new Exception("$answer is not a string");
+        }
+
         $challenge = $request->getSession()->get('challenge');
         if(!($challenge instanceof Challenge)){
             //TODO: What do we do when they don't have a challenge?
-            throw new Exception("You don't have an existing challenge, please retun with a valid game session token.");
+            return $this->json(['error' => "You don't have an existing challenge, please return with a valid game session token."]);
         }
 
-        $this->challengeService->submitChallenge($challenge, $answer);
+        try{
+            $challenge = $this->challengeService->submitChallenge($challenge, $answer);
+        } catch(InvalidDictionaryWordException $e){
+            return $this->json(['error' => "$answer is not a valid word in the english dictionary, please try again."]);
+        } catch(NotEnoughCharsException $e){
+            $challengeText = $challenge->getPrompt()->getText();
+            return $this->json(['error' => "Some of the characters in ($answer) do not exist in the challenge text: ($challengeText)."]);
+        }
+
+        $challenge->addUsedChars($answer);
+        $request->getSession()->set('challenge', $challenge);
+
+        // if(!$this->challengeService->isChallengeSolvable($challenge)){
+        //     //challenge is complete, save this to the leaderboard
+        // };
 
         return $this->json($this->normalizeChallenge($challenge));
     }
@@ -75,11 +99,20 @@ class GameController extends AbstractController
      * @return array<mixed>
      */
     private function normalizeChallenge(Challenge $challenge): array{
+        $usedChars = new CharFrequency($challenge->getUsedChars());
         return [
             'challenge' => $challenge->getPrompt()->getText(),
-            'used' => [
-
-            ]
+            'used' => $usedChars->getFrequencies()
         ];
     }
+
+    // /**
+    //  * TODO move this into a dedicated normalizer/serializer setup
+    //  * @return array<mixed>
+    //  */
+    // private function normalizeCharFrequency(CharFrequency $charFrequency): array{
+    //     return [
+    //         $charFrequency->getFrequencies()
+    //     ];
+    // }
 }

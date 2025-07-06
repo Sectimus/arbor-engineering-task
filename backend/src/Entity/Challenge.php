@@ -1,23 +1,16 @@
 <?php
 declare(strict_types=1);
 
+//TODO move this to models
 namespace Acme\CountUp\Entity;
 
-// use Doctrine\ORM\Mapping as ORM;
-
-// #[ORM\Entity]
 final class Challenge
 {
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column]
     private ?int $id = null;
 
-    // #[ORM\ManyToOne(targetEntity: Prompt::class)]
-    // #[ORM\JoinColumn(nullable: false)]
     private Prompt $prompt;
 
-    private string $usedChars;
+    private string $usedChars = '';
 
     public function getId(): ?int
     {
