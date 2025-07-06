@@ -13,3 +13,8 @@ api_challenge_get:
     path: /api/challenge
     controller: Acme\CountUp\Controller\GameController::getChallenge
     methods: [GET]
+
+api_challenge_submit:
+    path: /api/challenge
+    controller: Acme\CountUp\Controller\GameController::submitChallenge
+    methods: [POST]

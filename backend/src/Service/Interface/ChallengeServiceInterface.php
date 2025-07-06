@@ -9,4 +9,6 @@ use Acme\CountUp\Entity\Prompt;
 interface ChallengeServiceInterface
 {
     public function createChallenge(Prompt $prompt): Challenge;
+
+    public function submitChallenge(Challenge $prompt, string $answer): Challenge;
 }

@@ -17,6 +17,8 @@ final class Challenge
     // #[ORM\JoinColumn(nullable: false)]
     private Prompt $prompt;
 
+    private string $usedChars;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -37,5 +39,17 @@ final class Challenge
     {
         $this->prompt = $prompt;
         return $this;
+    }
+
+    public function addUsedChars(string $chars): self
+    {
+        $this->usedChars .= $chars;
+        
+        return $this;
+    }
+
+    public function getUsedChars(): string
+    {
+        return $this->usedChars;
     }
 }

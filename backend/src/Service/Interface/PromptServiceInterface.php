@@ -8,4 +8,6 @@ use Acme\CountUp\Entity\Prompt;
 interface PromptServiceInterface
 {
     public function generatePrompt(): Prompt;
+
+    public function charsAreWithinPrompt(Prompt $prompt, string $chars): bool;
 }
