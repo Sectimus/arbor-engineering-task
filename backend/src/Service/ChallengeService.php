@@ -19,8 +19,6 @@ class ChallengeService implements ChallengeServiceInterface
     public function createChallenge(Prompt $prompt): Challenge { 
         $challenge = new Challenge();
         $challenge->setPrompt($prompt);
-        // $gameSession = bin2hex(random_bytes(16));
-        // $challenge->setGameSession($gameSession);
         return $challenge;
     }
 
@@ -43,4 +41,9 @@ class ChallengeService implements ChallengeServiceInterface
 
         return $challenge;
     }
+
+    public function getSolutions(Challenge $challenge): array{
+        return [];
+    }
+    
 }

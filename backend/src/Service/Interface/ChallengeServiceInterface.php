@@ -11,4 +11,9 @@ interface ChallengeServiceInterface
     public function createChallenge(Prompt $prompt): Challenge;
 
     public function submitChallenge(Challenge $challenge, string $answer): Challenge;
+
+    /**
+     * @return array<string>
+     */
+    public function getSolutions(Challenge $challenge): array;
 }

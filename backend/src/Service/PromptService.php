@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
+use Acme\CountUp\Entity\CharFrequency;
 use Acme\CountUp\Entity\Prompt;
 use Acme\CountUp\Repository\WordRepository;
 use Acme\CountUp\Service\Interface\PromptServiceInterface;
@@ -45,50 +46,33 @@ class PromptService implements PromptServiceInterface{
     }
 
     public function charsAreWithinPrompt(Prompt $prompt, string $chars): bool{
-        $totalChars = $this->getCharFrequencyArray($prompt->getText());
-        $charsInAnswer = $this->getCharFrequencyArray($chars);
+        $promptFreq = new CharFrequency($prompt->getText());
+        $charFreq = new CharFrequency($chars);
+        $freqDelta = $promptFreq->subtractFrequency($charFreq);
+
+        // Check, if any character is less than 0 on frequency (if it is, then it's been used more than is allowed)
+        $test = array_any($freqDelta, fn($hz) => $hz < 0);
 
 
-        foreach ($charsInAnswer as $char => $frequencey) {
 
-            if($frequencey > 0 && isset($totalChars[$char]) && $totalChars[$char] > 0){
-                $frequenceyDelta = $totalChars[$char] - $frequencey;
 
-                if($frequenceyDelta < 0){
-                    // Not enough instances of the correct character are available.
-                    return false;
-                } else{
-                    //There are enough instance of this char, move on to checking the next char.
-                    continue;
-                } 
-            } else{
-                return false;
-            }
-        }
+        // foreach ($charsInAnswer as $char => $frequencey) {
+
+        //     if($frequencey > 0 && isset($totalChars[$char]) && $totalChars[$char] > 0){
+        //         $frequenceyDelta = $totalChars[$char] - $frequencey;
+
+        //         if($frequenceyDelta < 0){
+        //             // Not enough instances of the correct character are available.
+        //             return false;
+        //         } else{
+        //             //There are enough instance of this char, move on to checking the next char.
+        //             continue;
+        //         } 
+        //     } else{
+        //         return false;
+        //     }
+        // }
 
         return true;
-    }
-
-    /**
-     * Converts a string into a 1d array representing how many occurances each character has appeared. Keyed by the ASCII value.
-     * @return array<char, int>
-     */
-    private function getCharFrequencyArray(string $input): array{
-        $charFrequencyArray = [];
-        foreach (count_chars($input, 1) as $i => $val) {
-            $char = chr($i);
-            $charFrequencyArray[$char] = $val;
-        }
-        return $charFrequencyArray;
-    }
-
-    /**
-     * Subtracts one frequency array with another, returning only the values that were not matched.
-     * @param array<char, int> $a The original ocurrance array 
-     * @param array<char, int> $b The occurrance array to subtract from the original
-     * @return array<char, int> Any left over characters after the subtraction
-     */
-    private function subtractFrequency(array $a, array $b): array{
-        return [];
     }
 }

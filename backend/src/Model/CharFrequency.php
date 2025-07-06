@@ -45,7 +45,7 @@ class CharFrequency
     }
 
     /**
-     * 
+     * Creates a frequency array which is keyed by each unique character in the string.
      * @return array<string, int>
      */
     private static function createArrayFromString(string $string): array{
@@ -55,5 +55,27 @@ class CharFrequency
             $charFrequenciesArray[$char] = $val;
         }
         return $charFrequenciesArray;
+    }
+
+    /**
+     * Subtracts one frequency array with another, returning only the values that were not matched.
+     * @param CharFrequency $charFrequency The frequency to subtract
+     * @return array<char, int> Any left over characters after the subtraction
+     */
+    public function subtractFrequency(CharFrequency $charFrequency): array{
+        $result = $this->frequencies;
+        $subtractFrequencies = $charFrequency->getFrequencies();
+        $keysToSearch = array_keys($subtractFrequencies);
+        for ($i=0; $i < count($keysToSearch); $i++) { 
+            $currentChar = $keysToSearch[$i];
+
+            if(!array_key_exists($currentChar, $result)){
+                // No point subtracting from zero
+                continue;
+            }
+
+            $result[$currentChar] -= $subtractFrequencies[$currentChar];
+        }
+        return $result;
     }
 }
