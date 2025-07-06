@@ -4,6 +4,11 @@ controllers:
         namespace: Acme\CountUp\Controller
     type: attribute
 
+api_challenge_new:
+    path: /api/challenge/new
+    controller: Acme\CountUp\Controller\GameController::newChallenge
+    methods: [GET]
+
 api_challenge_get:
     path: /api/challenge
     controller: Acme\CountUp\Controller\GameController::getChallenge

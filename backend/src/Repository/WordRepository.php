@@ -33,28 +33,20 @@ class WordRepository extends EntityRepository
         }
     }
 
-//    /**
-//     * @return Champion[] Returns an array of Champion objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getRandomWord(): Word
+    {
+        $queryBuilder = $this->createQueryBuilder('w');
+        /** @var int $count */
+        $count = $queryBuilder->select('COUNT(w.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
 
-//    public function findOneBySomeField($value): ?Champion
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $randomOffset = rand(0, $count - 1);
+
+        return $queryBuilder->select('w')
+            ->setFirstResult($randomOffset)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

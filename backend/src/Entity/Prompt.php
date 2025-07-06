@@ -21,6 +21,8 @@ final class Prompt
     #[ORM\Column(length: 2)]
     private string $lang;
 
+    //TODO leaderboard should also go here so that they are grouped per prompt
+
     public function getId(): ?int
     {
         return $this->id;

@@ -3,24 +3,21 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
-use Acme\CountUp\Entity\Champion;
+use Acme\CountUp\Entity\Challenge;
+use Acme\CountUp\Entity\Prompt;
+use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
 
-class ChallengeService
+class ChallengeService implements ChallengeServiceInterface
 {
     public function __construct()
     {}
 
-    /**
-     * Creates a brand new challenge prompt and returns it
-     */
-    public function createPrompt(string $override = '')
-    {
+    public function createChallenge(Prompt $prompt): Challenge { 
+        $challenge = new Challenge();
+        $challenge->setPrompt($prompt);
+        // $gameSession = bin2hex(random_bytes(16));
+        // $challenge->setGameSession($gameSession);
+        return $challenge;
     }
-
-    /**
-     * Creates a challenge and returns it
-     */
-    public function validate()
-    {
-    }
+    
 }

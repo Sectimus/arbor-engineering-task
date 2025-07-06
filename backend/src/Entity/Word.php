@@ -9,9 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 final class Word
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int $id;
 
     #[ORM\Column(length: 45)]
     private string $term;
@@ -19,12 +18,12 @@ final class Word
     #[ORM\Column(length: 2)]
     private string $lang;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
 
-    protected function setId(int $id): self
+    public function setId(int $id): self
     {
         $this->id = $id;
         return $this;

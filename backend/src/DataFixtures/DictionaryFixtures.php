@@ -9,7 +9,9 @@ use Doctrine\Persistence\ObjectManager;
 
 class DictionaryFixtures extends Fixture
 {
-    private const IMPORT_BATCH_SIZE = 15000;
+    private const IMPORT_BATCH_SIZE = 5000;
+    
+    //TODO split up this loading func
     
     /**
      * @param EntityManager $manager 
@@ -20,12 +22,14 @@ class DictionaryFixtures extends Fixture
         $handle = fopen(__DIR__ . '/data/alpha_dictionaries/en.txt', 'r');
         if ($handle) {
             $count = 0;
+            $i = 1;
     
             while (($line = fgets($handle)) !== false) {
-                $term = trim($line);
+                $term = strtolower(trim($line));
                 if (!empty($term)) {
                     $word = new Word();
-                    $word->setLang('en')->setTerm($term);
+                    // We manually set the ID to ensure a range from 1->MAX is complete without any gaps for *cheap* random selection.
+                    $word->setId($i)->setLang('en')->setTerm($term);
                     $manager->persist($word);
                     
                     $count++;
@@ -34,6 +38,7 @@ class DictionaryFixtures extends Fixture
                         $manager->clear();
                         $count = 0;
                     }
+                    $i++;
                 }
             }
             fclose($handle);
@@ -41,10 +46,6 @@ class DictionaryFixtures extends Fixture
             // Flush any remaining entities
             $manager->flush();
             $manager->clear();
-            $manager->getConnection()->close();
-
-            // Begin a new transaction (required on php 8.4 due to https://github.com/doctrine/DoctrineFixturesBundle/issues/363)
-            $manager->getConnection()->beginTransaction();
         }
     }
 }
