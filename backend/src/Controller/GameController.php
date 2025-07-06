@@ -26,11 +26,11 @@ class GameController extends AbstractController
 
         $challenge = $this->challengeService->createChallenge($prompt);
 
-        //place the challenge in the session so the user can return
+        //place the challenge in the session so the user can return later
         $request->getSession()->set('challenge', $challenge);
 
         // Serialize and return as json.
-        return $this->json(['challenge' => $prompt->getText()]);
+        return $this->json($this->normalizeChallenge($challenge));
     }
 
     // public function replaceChallenge(Request $request): JsonResponse{
@@ -47,6 +47,39 @@ class GameController extends AbstractController
             return $this->newChallenge($request);
         }
 
-        return $this->json(['challenge' => $challenge->getPrompt()->getText()]);
+        return $this->json($this->normalizeChallenge($challenge));
+    }
+
+    /**
+     * Verifies a submission against a challenge
+     */
+    public function submitChallenge(Request $request): JsonResponse
+    {
+        $answer = $request->getPayload()->get('answer');
+        if($answer === null){
+            throw new Exception("'answer' should be provided but is missing");
+        }
+        $challenge = $request->getSession()->get('challenge');
+        if(!($challenge instanceof Challenge)){
+            //TODO: What do we do when they don't have a challenge?
+            throw new Exception("You don't have an existing challenge, please retun with a valid game session token.");
+        }
+
+        $this->challengeService->submitChallenge($challenge, $answer);
+
+        return $this->json($this->normalizeChallenge($challenge));
+    }
+
+    /**
+     * TODO move this into a dedicated normalizer/serializer setup
+     * @return array<mixed>
+     */
+    private function normalizeChallenge(Challenge $challenge): array{
+        return [
+            'challenge' => $challenge->getPrompt()->getText(),
+            'used' => [
+
+            ]
+        ];
     }
 }
