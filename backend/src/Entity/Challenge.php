@@ -8,7 +8,7 @@ final class Challenge
 {
     private ?int $id = null;
 
-    private Prompt $prompt;
+    private Puzzle $puzzle;
 
     private string $usedChars = '';
 
@@ -23,14 +23,14 @@ final class Challenge
         return $this;
     }
 
-    public function getPrompt(): Prompt
+    public function getPuzzle(): Puzzle
     {
-        return $this->prompt;
+        return $this->puzzle;
     }
 
-    public function setPrompt(Prompt $prompt): self
+    public function setPuzzle(Puzzle $puzzle): self
     {
-        $this->prompt = $prompt;
+        $this->puzzle = $puzzle;
         return $this;
     }
 

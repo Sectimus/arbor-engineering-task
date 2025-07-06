@@ -11,7 +11,7 @@ final class Version20250705054454 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Create the initial Prompt entity';
+        return 'Create the initial Puzzle entity';
     }
 
     /*
@@ -21,7 +21,7 @@ final class Version20250705054454 extends AbstractMigration
     {
         // TODO create an index against the words
         $this->addSql(<<<'SQL'
-            CREATE TABLE prompt (
+            CREATE TABLE puzzle (
                 id INT AUTO_INCREMENT NOT NULL, 
                 text VARCHAR(45) NOT NULL, 
                 lang VARCHAR(2) NOT NULL, 
@@ -32,7 +32,7 @@ final class Version20250705054454 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql(<<<'SQL'
-            DROP TABLE prompt
+            DROP TABLE puzzle
         SQL);
     }
 }

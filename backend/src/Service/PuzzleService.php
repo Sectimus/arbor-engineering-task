@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Acme\CountUp\Service;
 
 use Acme\CountUp\Entity\CharFrequency;
-use Acme\CountUp\Entity\Prompt;
+use Acme\CountUp\Entity\Puzzle;
 use Acme\CountUp\Repository\WordRepository;
-use Acme\CountUp\Service\Interface\PromptServiceInterface;
+use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 
-class PromptService implements PromptServiceInterface{
-    private const PROMPT_LENGTH = 20;
+class PuzzleService implements PuzzleServiceInterface{
+    private const PUZZLE_LENGTH = 20;
     public function __construct(
         private WordRepository $wordRepository,
     )
@@ -21,16 +21,16 @@ class PromptService implements PromptServiceInterface{
         return $word !== null;
     }
 
-    public function generatePrompt(): Prompt { 
+    public function generatePuzzle(): Puzzle { 
         $seed = $this->wordRepository->getRandomWord();
 
-        $requiredPaddingLength = self::PROMPT_LENGTH - strlen($seed->getTerm());
+        $requiredPaddingLength = self::PUZZLE_LENGTH - strlen($seed->getTerm());
         $randomPadding = $this->generateRandomPadding($requiredPaddingLength);
         $randomString = str_shuffle(strtolower($randomPadding . $seed->getTerm()));
         
-        $prompt = new Prompt()->setLang('en')->setText($randomString);
+        $puzzle = new Puzzle()->setLang('en')->setText($randomString);
 
-        return $prompt;
+        return $puzzle;
     }
 
     private function generateRandomPadding(int $length): string {
@@ -45,10 +45,10 @@ class PromptService implements PromptServiceInterface{
         return $randomString;
     }
 
-    public function charsAreWithinPrompt(Prompt $prompt, string $chars): bool{
-        $promptFreq = new CharFrequency($prompt->getText());
+    public function charsAreWithinPuzzle(Puzzle $puzzle, string $chars): bool{
+        $puzzleFreq = new CharFrequency($puzzle->getText());
         $charFreq = new CharFrequency($chars);
-        $freqDelta = $promptFreq->subtractFrequency($charFreq);
+        $freqDelta = $puzzleFreq->subtractFrequency($charFreq);
 
         // Check, if any character is less than 0 on frequency (if it is, then it's been used more than is allowed)
         $test = array_any($freqDelta, fn($hz) => $hz < 0);

@@ -23,8 +23,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Acme\CountUp\Service\PromptService: ~
-    Acme\CountUp\Service\PromptServiceInterface: '@Acme\CountUp\Service\PromptService'
+    Acme\CountUp\Service\PuzzleService: ~
+    Acme\CountUp\Service\PuzzleServiceInterface: '@Acme\CountUp\Service\PuzzleService'
 
     Acme\CountUp\Service\ChallengeService: ~
     Acme\CountUp\Service\ChallengeServiceInterface: '@Acme\CountUp\Service\ChallengeService'

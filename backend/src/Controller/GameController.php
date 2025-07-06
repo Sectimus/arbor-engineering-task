@@ -9,7 +9,7 @@ use Acme\CountUp\Exception\ChallengeException;
 use Acme\CountUp\Exception\InvalidDictionaryWordException;
 use Acme\CountUp\Exception\NotEnoughCharsException;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
-use Acme\CountUp\Service\Interface\PromptServiceInterface;
+use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 use Exception;
 use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,16 +20,16 @@ use Symfony\Component\HttpFoundation\Request;
 class GameController extends AbstractController
 {
     public function __construct(
-        private PromptServiceInterface $promptService,
+        private PuzzleServiceInterface $puzzleService,
         private ChallengeServiceInterface $challengeService,
     ){}
 
     public function newChallenge(Request $request): JsonResponse
     {
-        // create a brand new prompt to use with this challenge. (Instead of using an existing one, which could be linked with an existing leaderboard)
-        $prompt = $this->promptService->generatePrompt();
+        // create a brand new puzzle to use with this challenge. (Instead of using an existing one, which could be linked with an existing leaderboard)
+        $puzzle = $this->puzzleService->generatePuzzle();
 
-        $challenge = $this->challengeService->createChallenge($prompt);
+        $challenge = $this->challengeService->createChallenge($puzzle);
 
         //place the challenge in the session so the user can return later
         $request->getSession()->set('challenge', $challenge);
@@ -80,7 +80,7 @@ class GameController extends AbstractController
         } catch(InvalidDictionaryWordException $e){
             return $this->json(['error' => "$answer is not a valid word in the english dictionary, please try again."]);
         } catch(NotEnoughCharsException $e){
-            $challengeText = $challenge->getPrompt()->getText();
+            $challengeText = $challenge->getPuzzle()->getText();
             return $this->json(['error' => "Some of the characters in ($answer) do not exist in the challenge text: ($challengeText)."]);
         }
 
@@ -101,7 +101,7 @@ class GameController extends AbstractController
     private function normalizeChallenge(Challenge $challenge): array{
         $usedChars = new CharFrequency($challenge->getUsedChars());
         return [
-            'challenge' => $challenge->getPrompt()->getText(),
+            'challenge' => $challenge->getPuzzle()->getText(),
             'used' => $usedChars->getFrequencies()
         ];
     }

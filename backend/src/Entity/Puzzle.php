@@ -5,10 +5,10 @@ namespace Acme\CountUp\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-//TODO prompts should implicitly be unique per character. Such that there doesn't exist both ABCDE and ABECD
+//TODO puzzles should implicitly be unique per character. Such that there doesn't exist both ABCDE and ABECD
 
 #[ORM\Entity]
-final class Prompt
+final class Puzzle
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,7 +21,7 @@ final class Prompt
     #[ORM\Column(length: 2)]
     private string $lang;
 
-    //TODO leaderboard should also go here so that they are grouped per prompt
+    //TODO leaderboard should also go here so that they are grouped per puzzle
 
     public function getId(): ?int
     {
