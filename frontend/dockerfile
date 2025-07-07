@@ -1,0 +1,19 @@
+# Starts with root
+FROM node:18-alpine
+WORKDIR /var/www/countup
+
+ADD . .
+
+RUN apk add curl;
+
+
+# We don't need root anymore
+RUN adduser -u 1001 -S www-data -G www-data
+RUN chown -R www-data:www-data /var/www/countup
+USER www-data
+WORKDIR /var/www/countup
+
+EXPOSE 5173
+
+# Keep container running
+ENTRYPOINT [ "/bin/sh", "container-entrypoint.sh" ]
