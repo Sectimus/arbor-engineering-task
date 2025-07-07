@@ -6,20 +6,20 @@ controllers:
 
 api_challenge_new:
     path: /api/challenge/new
-    controller: Acme\CountUp\Controller\GameController::newChallenge
+    controller: Acme\CountUp\Controller\GameController::newChallengeAction
     methods: [GET]
 
 api_challenge_get:
     path: /api/challenge
-    controller: Acme\CountUp\Controller\GameController::getChallenge
+    controller: Acme\CountUp\Controller\GameController::getChallengeAction
     methods: [GET]
 
 api_challenge_submit:
     path: /api/challenge
-    controller: Acme\CountUp\Controller\GameController::submitChallenge
+    controller: Acme\CountUp\Controller\GameController::submitChallengeAction
     methods: [POST]
 
 api_challenge_complete:
     path: /api/challenge/complete
-    controller: Acme\CountUp\Controller\GameController::completeChallenge
+    controller: Acme\CountUp\Controller\GameController::completeChallengeAction
     methods: [POST]

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Acme\CountUp\Service;
 
 use Acme\CountUp\Model\CharFrequency;
-use Acme\CountUp\Entity\Puzzle;
+use Acme\CountUp\Model\Puzzle;
 use Acme\CountUp\Repository\WordRepository;
 use Acme\CountUp\Service\Interface\FrequencyInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;

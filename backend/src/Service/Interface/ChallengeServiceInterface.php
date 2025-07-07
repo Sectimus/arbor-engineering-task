@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Acme\CountUp\Service\Interface;
 
 use Acme\CountUp\Entity\Challenge;
-use Acme\CountUp\Entity\Puzzle;
+use Acme\CountUp\Model\Puzzle;
 use Acme\CountUp\Entity\Word;
 
 interface ChallengeServiceInterface

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Acme\CountUp\Entity;
 
 use Acme\CountUp\Model\CharFrequency;
+use Acme\CountUp\Model\Puzzle;
 
 final class Challenge
 {

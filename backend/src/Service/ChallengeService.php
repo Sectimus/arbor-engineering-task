@@ -5,7 +5,7 @@ namespace Acme\CountUp\Service;
 
 use Acme\CountUp\Entity\Challenge;
 use Acme\CountUp\Model\CharFrequency;
-use Acme\CountUp\Entity\Puzzle;
+use Acme\CountUp\Model\Puzzle;
 use Acme\CountUp\Entity\Word;
 use Acme\CountUp\Exception\InvalidDictionaryWordException;
 use Acme\CountUp\Exception\NotEnoughCharsException;
