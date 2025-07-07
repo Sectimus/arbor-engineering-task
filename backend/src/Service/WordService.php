@@ -3,17 +3,21 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
-use Acme\CountUp\Entity\CharFrequency;
 use Acme\CountUp\Repository\WordRepository;
+use Acme\CountUp\Service\Interface\WordServiceInterface;
 
-class WordService {
-    public function __construct(private WordRepository $wordRepository)
-    {
-        
+class WordService implements WordServiceInterface {
+    public function __construct(
+        private WordRepository $wordRepository
+    ){}
+
+    public function isValidDictionaryWord(string $string): bool { 
+        $word = $this->wordRepository->findWordByTerm($string);
+        return $word !== null;
     }
-    public function scrabbled(string $string): void{
-        $freq = new CharFrequency($string);
-        $items = $this->wordRepository->scrabbleCheck($freq->getFrequencies());
-        $asd=1;
+
+    public function findAnagrams(string $word): array{
+        $items = $this->wordRepository->findAnagrams($word);
+        return $items;
     }
 }

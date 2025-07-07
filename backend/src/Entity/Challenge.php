@@ -4,6 +4,8 @@ declare(strict_types=1);
 //TODO move this to models
 namespace Acme\CountUp\Entity;
 
+use Acme\CountUp\Model\CharFrequency;
+
 final class Challenge
 {
     private CharFrequency $usedChars;

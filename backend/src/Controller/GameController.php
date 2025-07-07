@@ -4,18 +4,13 @@ declare(strict_types=1);
 namespace Acme\CountUp\Controller;
 
 use Acme\CountUp\Entity\Challenge;
-use Acme\CountUp\Entity\CharFrequency;
-use Acme\CountUp\Entity\Puzzle;
-use Acme\CountUp\Exception\ChallengeException;
-use Acme\CountUp\Exception\InvalidDictionaryWordException;
+use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Exception\NotEnoughCharsException;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
-use Acme\CountUp\Service\WordService;
+use Acme\CountUp\Service\Interface\WordServiceInterface;
 use Exception;
-use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,12 +19,12 @@ class GameController extends AbstractController
     public function __construct(
         private PuzzleServiceInterface $puzzleService,
         private ChallengeServiceInterface $challengeService,
-        private WordService $wordService,
+        private WordServiceInterface $wordService,
     ){}
 
     public function newChallenge(Request $request): JsonResponse
     {
-        // create a brand new puzzle to use with this challenge. (Instead of using an existing one, which could be linked with an existing leaderboard)
+        // create a brand new puzzle to use with this challenge. (Instead of using an existing one, which could be exist on the session)
         $puzzle = $this->puzzleService->generatePuzzle();
 
         //TODO remove me OVERRIDE
@@ -63,12 +58,8 @@ class GameController extends AbstractController
     public function submitChallenge(Request $request): JsonResponse
     {
         $answer = $request->getPayload()->get('answer');
-        if($answer === null){
-            throw new Exception("'answer' should be provided but is missing");
-        }
-        if(!is_string($answer)){
-            //TODO: handle numerical answers or answers with punctuation (any non (A-Z)).
-            throw new Exception("$answer is not a string");
+        if($answer === null || !is_string($answer)){
+            throw new Exception("'answer' should be a valid string");
         }
 
         $challenge = $request->getSession()->get('challenge');
@@ -77,10 +68,14 @@ class GameController extends AbstractController
             return $this->json(['error' => "You don't have an existing challenge, please return with a valid game session token."]);
         }
 
+        if(!$this->wordService->isValidDictionaryWord($answer)){
+            return $this->errorReponse($challenge, "The provided word is not a valid word in the english dictionary");
+        }
+
+        $this->puzzleService->canRemoveCharsFromPuzzle($challenge->getPuzzle(), new CharFrequency($answer));
+
         try{
             $challenge = $this->challengeService->submitChallenge($challenge, $answer);
-        } catch(InvalidDictionaryWordException $e){
-            return $this->errorReponse($challenge, "The provided word is not a valid word in the english dictionary");
         } catch(NotEnoughCharsException $e){
             return $this->errorReponse($challenge, "Not enough characters available to use that word");
         }
@@ -116,8 +111,10 @@ class GameController extends AbstractController
 
         $this->challengeService->completeChallenge($challenge, $name);
 
-        //final words you could have chosen.
-        $solutions = $this->challengeService->getPossibleSolutions($challenge);
+        // Find out what characters are left (so that we can search for anagrams)
+        $freq = new CharFrequency($challenge->getPuzzle()->getText());
+        $freq->subtractFrequency($challenge->getUsedChars());
+        $solutions = $this->wordService->findAnagrams($freq->toString());
 
         return $this->json([
             'challenge' => $challenge->getPuzzle()->getText(),

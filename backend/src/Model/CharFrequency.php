@@ -1,8 +1,7 @@
 <?php
 declare(strict_types=1);
 
-//TODO move this to models
-namespace Acme\CountUp\Entity;
+namespace Acme\CountUp\Model;
 
 use Acme\CountUp\Service\Interface\FrequencyInterface;
 
@@ -15,6 +14,16 @@ class CharFrequency implements FrequencyInterface
         protected string $inputString, 
     ){
         $this->frequencies = self::createArrayFromString($inputString);
+    }
+
+    public function toString(): string { 
+        $freqString = '';
+        foreach ($this->frequencies as $char => $count) {
+            for ($i=0; $i < $count; $i++) { 
+                $freqString .= $char;
+            }
+        }
+        return $freqString;
     }
 
     /**

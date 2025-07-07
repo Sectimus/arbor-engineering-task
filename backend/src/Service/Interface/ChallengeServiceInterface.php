@@ -14,9 +14,4 @@ interface ChallengeServiceInterface
     public function submitChallenge(Challenge $challenge, string $answer): Challenge;
 
     public function completeChallenge(Challenge $challenge, string $name): void;
-
-    /**
-     * @return array<string>
-     */
-    public function getPossibleSolutions(Challenge $challenge): array;
 }

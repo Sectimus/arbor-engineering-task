@@ -22,4 +22,9 @@ interface FrequencyInterface
      * @param self $frequency The frequency to subtract
      */
     public function subtractFrequency(self $frequency): self;
+
+    /**
+     * Converts the frequency to a string representation (`['a'=>2, 'b'=>3, 'k'=>1, 'l'=>2]` should return `'aabbbkll'`)
+     */
+    public function toString(): string;
 }

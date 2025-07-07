@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
-use Acme\CountUp\Entity\CharFrequency;
+use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Entity\Puzzle;
 use Acme\CountUp\Repository\WordRepository;
+use Acme\CountUp\Service\Interface\FrequencyInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 
 class PuzzleService implements PuzzleServiceInterface{
@@ -45,7 +46,7 @@ class PuzzleService implements PuzzleServiceInterface{
         return $randomString;
     }
 
-    public function canRemoveCharsFromPuzzle(Puzzle $puzzle, CharFrequency $charFrequency): bool{
+    public function canRemoveCharsFromPuzzle(Puzzle $puzzle, FrequencyInterface $charFrequency): bool{
         $puzzleFreq = new CharFrequency($puzzle->getText());
         $puzzleFreq->subtractFrequency($charFrequency);
 
