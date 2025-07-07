@@ -32,7 +32,8 @@
     "symfony/property-info": "^6.4",
     "symfony/serializer": "^6.4",
     "symfony/validator": "^6.4",
-    "symfony/http-foundation": "^7.3"
+    "symfony/http-foundation": "^7.3",
+    "nelmio/cors-bundle": "^2.5"
   },
   "require-dev": {
     "symfony/debug-bundle": "^6.0",
