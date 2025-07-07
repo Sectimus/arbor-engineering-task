@@ -16,9 +16,9 @@ class ChampionRepository extends EntityRepository
         parent::__construct($em, $em->getClassMetadata(Champion::class));
     }
 
-    public function save(Champion $track, bool $flush = false): void
+    public function save(Champion $champion, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($track);
+        $this->getEntityManager()->persist($champion);
         if ($flush) {
             $this->getEntityManager()->flush();
         }
@@ -30,6 +30,19 @@ class ChampionRepository extends EntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByName(string $name): ?Champion{
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+           ->where([$qb->expr()->eq(
+            'c.name', ':name'
+        )]);
+
+        $qb->setParameter('name', $name);
+
+        return $qb->getQuery()
+            ->getOneOrNullResult();
     }
 
 //    /**

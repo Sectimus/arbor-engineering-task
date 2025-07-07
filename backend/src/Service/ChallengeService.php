@@ -9,12 +9,16 @@ use Acme\CountUp\Entity\Puzzle;
 use Acme\CountUp\Exception\InvalidDictionaryWordException;
 use Acme\CountUp\Exception\NotEnoughCharsException;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
+use Acme\CountUp\Service\Interface\ChampionServiceInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 use Exception;
 
 class ChallengeService implements ChallengeServiceInterface
 {
-    public function __construct(private PuzzleServiceInterface $puzzleService)
+    public function __construct(
+        private PuzzleServiceInterface $puzzleService,
+        private ChampionServiceInterface $championService
+        )
     {}
 
     public function createChallenge(Puzzle $puzzle): Challenge { 
@@ -44,6 +48,13 @@ class ChallengeService implements ChallengeServiceInterface
         $challenge->addUsedChars(new CharFrequency($answer));
 
         return $challenge;
+    }
+
+    public function completeChallenge(Challenge $challenge, string $name): void { 
+        $champion = $this->championService->getChampion($name);
+
+        $this->championService->addScoreToChampion($champion, $challenge->getScore());
+        $this->championService->saveChampion($champion);
     }
 
     public function getSolutions(Challenge $challenge): array{

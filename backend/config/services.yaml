@@ -28,3 +28,6 @@ services:
 
     Acme\CountUp\Service\ChallengeService: ~
     Acme\CountUp\Service\ChallengeServiceInterface: '@Acme\CountUp\Service\ChallengeService'
+
+    Acme\CountUp\Service\ChampionService: ~
+    Acme\CountUp\Service\ChampionServiceInterface: '@Acme\CountUp\Service\ChampionService'

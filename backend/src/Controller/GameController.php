@@ -38,10 +38,6 @@ class GameController extends AbstractController
         return $this->successResponse($challenge);
     }
 
-    // public function replaceChallenge(Request $request): JsonResponse{
-    //     //find an existing challenge (that someone has completed at least once) in the database
-    // }
-
     /**
      * Gets the current challenge, or returns a new one if this is a new session.
      */
@@ -93,6 +89,34 @@ class GameController extends AbstractController
     }
 
     /**
+     * Completes the challenge for the current user
+     */
+    public function completeChallenge(Request $request): JsonResponse
+    {
+        $name = $request->getPayload()->get('name');
+        if($name === null){
+            throw new Exception("'name' should be provided but is missing");
+        }
+        if(!is_string($name)){
+            throw new Exception("$name is not a string");
+        }
+
+        $challenge = $request->getSession()->get('challenge');
+        if(!($challenge instanceof Challenge)){
+            //TODO: What do we do when they don't have a challenge?
+            return $this->json(['error' => "You don't have an existing challenge, please return with a valid game session token."]);
+        }
+
+        $this->challengeService->completeChallenge($challenge, $name);
+
+        //words you could have done
+        // $this->challengeService->getSolutions($challenge);
+
+        return $this->successResponse($challenge);
+    }
+
+
+    /**
      * TODO move these into a dedicated normalizer/serializer setup
      */
     private function successResponse(Challenge $challenge): JsonResponse{
@@ -111,4 +135,12 @@ class GameController extends AbstractController
             'score' => $challenge->getScore()
         ]);
     }
+    // private function leaderboardResponse(): JsonResponse{
+
+    //     return $this->json([
+    //         'challenge' => $challenge->getPuzzle()->getText(),
+    //         'used' => $challenge->getUsedChars()->getFrequencies(),
+    //         'score' => $challenge->getScore()
+    //     ]);
+    // }
 }

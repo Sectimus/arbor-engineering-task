@@ -52,4 +52,10 @@ final class Champion
         $this->score = $score;
         return $this;
     }
+
+    public function addScore(int $score): self
+    {
+        $this->score += $score;
+        return $this;
+    }
 }
