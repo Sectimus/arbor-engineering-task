@@ -35,7 +35,7 @@ class GameController extends AbstractController
         $request->getSession()->set('challenge', $challenge);
 
         // Serialize and return as json.
-        return $this->json($this->normalizeChallenge($challenge));
+        return $this->successResponse($challenge);
     }
 
     // public function replaceChallenge(Request $request): JsonResponse{
@@ -52,7 +52,7 @@ class GameController extends AbstractController
             return $this->newChallenge($request);
         }
 
-        return $this->json($this->normalizeChallenge($challenge));
+        return $this->successResponse($challenge);
     }
 
     /**
@@ -78,10 +78,9 @@ class GameController extends AbstractController
         try{
             $challenge = $this->challengeService->submitChallenge($challenge, $answer);
         } catch(InvalidDictionaryWordException $e){
-            return $this->json(['error' => "$answer is not a valid word in the english dictionary, please try again."]);
+            return $this->errorReponse($challenge, "The provided word is not a valid word in the english dictionary");
         } catch(NotEnoughCharsException $e){
-            $challengeText = $challenge->getPuzzle()->getText();
-            return $this->json(['error' => "Some of the characters in ($answer) do not exist in the challenge text: ($challengeText)."]);
+            return $this->errorReponse($challenge, "Not enough characters available to use that word");
         }
 
         $request->getSession()->set('challenge', $challenge);
@@ -90,27 +89,26 @@ class GameController extends AbstractController
         //     //challenge is complete, save this to the leaderboard
         // };
 
-        return $this->json($this->normalizeChallenge($challenge));
+        return $this->successResponse($challenge);
     }
 
     /**
-     * TODO move this into a dedicated normalizer/serializer setup
-     * @return array<mixed>
+     * TODO move these into a dedicated normalizer/serializer setup
      */
-    private function normalizeChallenge(Challenge $challenge): array{
-        return [
-            'challenge' => $challenge->getPuzzle()->getText(),
-            'used' => $challenge->getUsedChars()->getFrequencies()
-        ];
-    }
+    private function successResponse(Challenge $challenge): JsonResponse{
 
-    // /**
-    //  * TODO move this into a dedicated normalizer/serializer setup
-    //  * @return array<mixed>
-    //  */
-    // private function normalizeCharFrequency(CharFrequency $charFrequency): array{
-    //     return [
-    //         $charFrequency->getFrequencies()
-    //     ];
-    // }
+        return $this->json([
+            'challenge' => $challenge->getPuzzle()->getText(),
+            'used' => $challenge->getUsedChars()->getFrequencies(),
+            'score' => $challenge->getScore()
+        ]);
+    }
+    private function errorReponse(Challenge $challenge, string $message): JsonResponse{
+        return $this->json([
+            'error' => $message,
+            'challenge' => $challenge->getPuzzle()->getText(),
+            'used' => $challenge->getUsedChars()->getFrequencies(),
+            'score' => $challenge->getScore()
+        ]);
+    }
 }
