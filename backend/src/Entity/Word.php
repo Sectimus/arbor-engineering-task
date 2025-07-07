@@ -3,11 +3,23 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Entity;
 
+use Acme\CountUp\Model\CharFrequency;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 final class Word
 {
+    public function __construct(string $term)
+    {
+        $charFreq = new CharFrequency($term);
+
+        //YUCK
+        foreach ($charFreq->getFrequencies() as $char => $frequency) {   
+            $property = 'l_'.$char;
+            $this->{$property} = $frequency;
+        }
+    }
+
     #[ORM\Id]
     #[ORM\Column]
     private int $id;
@@ -36,4 +48,59 @@ final class Word
         $this->term = $term;
         return $this;
     }
+
+// YUCK
+    #[ORM\Column]
+    private int $l_a=0;
+    #[ORM\Column]
+    private int $l_b=0;
+    #[ORM\Column]
+    private int $l_c=0;
+    #[ORM\Column]
+    private int $l_d=0;
+    #[ORM\Column]
+    private int $l_e=0;
+    #[ORM\Column]
+    private int $l_f=0;
+    #[ORM\Column]
+    private int $l_g=0;
+    #[ORM\Column]
+    private int $l_h=0;
+    #[ORM\Column]
+    private int $l_i=0;
+    #[ORM\Column]
+    private int $l_j=0;
+    #[ORM\Column]
+    private int $l_k=0;
+    #[ORM\Column]
+    private int $l_l=0;
+    #[ORM\Column]
+    private int $l_m=0;
+    #[ORM\Column]
+    private int $l_n=0;
+    #[ORM\Column]
+    private int $l_o=0;
+    #[ORM\Column]
+    private int $l_p=0;
+    #[ORM\Column]
+    private int $l_q=0;
+    #[ORM\Column]
+    private int $l_r=0;
+    #[ORM\Column]
+    private int $l_s=0;
+    #[ORM\Column]
+    private int $l_t=0;
+    #[ORM\Column]
+    private int $l_u=0;
+    #[ORM\Column]
+    private int $l_v=0;
+    #[ORM\Column]
+    private int $l_w=0;
+    #[ORM\Column]
+    private int $l_x=0;
+    #[ORM\Column]
+    private int $l_y=0;
+    #[ORM\Column]
+    private int $l_z=0;
+    
 }

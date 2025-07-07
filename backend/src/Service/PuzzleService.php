@@ -22,7 +22,15 @@ class PuzzleService implements PuzzleServiceInterface{
         return $word !== null;
     }
 
+    /**
+     * @return array<string>
+     */
+    public function getSolutions(FrequencyInterface $frequencyInterface): array{
+        return $this->wordRepository->findWordByCharFrequency($frequencyInterface);
+    }
+
     public function generatePuzzle(): Puzzle { 
+        $temp = $this->getSolutions(new CharFrequency('lard'));
         $seed = $this->wordRepository->getRandomWord();
 
         $requiredPaddingLength = self::PUZZLE_LENGTH - strlen($seed->getTerm());

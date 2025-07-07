@@ -5,12 +5,16 @@ namespace Acme\CountUp\Repository;
 use Acme\CountUp\Entity\Champion;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Entity\Word;
+use Acme\CountUp\Service\Interface\FrequencyInterface;
 use BadMethodCallException;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Exception\ORMException;
 use InvalidArgumentException;
+use LogicException;
+use Psr\Cache\InvalidArgumentException as CacheInvalidArgumentException;
 use RuntimeException;
 
 /**
@@ -89,5 +93,36 @@ class WordRepository extends EntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleResult();
+    }
+
+    //YUCK
+    private const ALPHABET = [
+        'a','b','c','d','e','f','g','h','i',
+        'j','k','l','m','n','o','p','q','r',
+        's','t','u','v','w','x','y','z'
+    ];
+
+    /**
+     * @return array<string>
+     */
+    public function findWordByCharFrequency(FrequencyInterface $charFreq): array{
+        $maxLength = strlen($charFreq->toString());
+        $qb = $this->createQueryBuilder('w');
+
+        $qb->select('w.term');
+            // ->where($qb->)
+
+        $freqs = $charFreq->getFrequencies();
+        foreach (self::ALPHABET as $char) {
+            if(array_key_exists($char, $freqs)){
+                $qb->andWhere($qb->expr()->lte('w.l_'.$char, $freqs[$char]));
+                continue;
+            }
+            $qb->andWhere($qb->expr()->eq('w.l_'.$char, 0));
+        }
+        
+        $qb->setMaxResults(10);
+
+        return $qb->getQuery()->getResult(AbstractQuery::HYDRATE_SCALAR);
     }
 }

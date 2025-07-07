@@ -93,7 +93,7 @@ class GameController extends AbstractController
         $request->getSession()->set('challenge', $challenge);
 
         // if(!$this->challengeService->isChallengeSolvable($challenge)){
-        //     //challenge is complete, save this to the leaderboard
+        //     //This would be very nice to have, but would be could be very computationally expensive!
         // };
 
         return $this->successResponse($challenge);
