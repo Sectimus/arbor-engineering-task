@@ -11,9 +11,10 @@ final class Word
 {
     public function __construct(string $term)
     {
-        $charFreq = new CharFrequency($term);
-
         //YUCK
+        $charFreq = new CharFrequency($term);
+        $this->term_length = strlen($term);
+    
         foreach ($charFreq->getFrequencies() as $char => $frequency) {   
             $property = 'l_'.$char;
             $this->{$property} = $frequency;
@@ -50,6 +51,8 @@ final class Word
     }
 
 // YUCK
+    #[ORM\Column]
+    private int $term_length=0;
     #[ORM\Column]
     private int $l_a=0;
     #[ORM\Column]

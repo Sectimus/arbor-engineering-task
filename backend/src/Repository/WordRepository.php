@@ -96,29 +96,18 @@ class WordRepository extends EntityRepository
     }
 
     //YUCK
-    private const ALPHABET = [
-        'a','b','c','d','e','f','g','h','i',
-        'j','k','l','m','n','o','p','q','r',
-        's','t','u','v','w','x','y','z'
-    ];
-
     /**
      * @return array<string>
      */
-    public function findWordByCharFrequency(FrequencyInterface $charFreq): array{
-        $maxLength = strlen($charFreq->toString());
+    public function findWordTermByCharFrequency(FrequencyInterface $charFreq): array{
         $qb = $this->createQueryBuilder('w');
 
         $qb->select('w.term');
-            // ->where($qb->)
 
-        $freqs = $charFreq->getFrequencies();
-        foreach (self::ALPHABET as $char) {
-            if(array_key_exists($char, $freqs)){
-                $qb->andWhere($qb->expr()->lte('w.l_'.$char, $freqs[$char]));
-                continue;
-            }
-            $qb->andWhere($qb->expr()->eq('w.l_'.$char, 0));
+        $maxWordLength = 0;
+        foreach ($charFreq->getFrequencies() as $char => $freq) {
+            $qb->andWhere($qb->expr()->lte('w.l_'.$char, $freq));
+            $maxWordLength += $freq;
         }
         
         $qb->setMaxResults(10);

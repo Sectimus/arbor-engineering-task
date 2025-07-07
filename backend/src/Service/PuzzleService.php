@@ -26,7 +26,7 @@ class PuzzleService implements PuzzleServiceInterface{
      * @return array<string>
      */
     public function getSolutions(FrequencyInterface $frequencyInterface): array{
-        return $this->wordRepository->findWordByCharFrequency($frequencyInterface);
+        return $this->wordRepository->findWordTermByCharFrequency($frequencyInterface);
     }
 
     public function generatePuzzle(): Puzzle { 
@@ -43,6 +43,7 @@ class PuzzleService implements PuzzleServiceInterface{
     }
 
     private function generateRandomPadding(int $length): string {
+        //TODO duplicate alphabet?
         $characters = 'abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
         $randomString = '';
