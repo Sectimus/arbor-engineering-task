@@ -41,4 +41,11 @@ final class Challenge
     {
         return $this->usedChars;
     }
+
+    /**
+     * Calculates a score based on the amount of used characters there are.
+     */
+    public function getScore(): int{
+        return array_reduce($this->usedChars->getFrequencies(), fn(int $carry, int $item) => $carry + $item, 0);
+    }
 }
