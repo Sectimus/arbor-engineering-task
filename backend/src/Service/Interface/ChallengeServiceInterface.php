@@ -5,6 +5,7 @@ namespace Acme\CountUp\Service\Interface;
 
 use Acme\CountUp\Entity\Challenge;
 use Acme\CountUp\Entity\Puzzle;
+use Acme\CountUp\Entity\Word;
 
 interface ChallengeServiceInterface
 {
@@ -17,5 +18,5 @@ interface ChallengeServiceInterface
     /**
      * @return array<string>
      */
-    public function getSolutions(Challenge $challenge): array;
+    public function getPossibleSolutions(Challenge $challenge): array;
 }

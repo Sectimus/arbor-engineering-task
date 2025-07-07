@@ -5,11 +5,13 @@ namespace Acme\CountUp\Controller;
 
 use Acme\CountUp\Entity\Challenge;
 use Acme\CountUp\Entity\CharFrequency;
+use Acme\CountUp\Entity\Puzzle;
 use Acme\CountUp\Exception\ChallengeException;
 use Acme\CountUp\Exception\InvalidDictionaryWordException;
 use Acme\CountUp\Exception\NotEnoughCharsException;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
+use Acme\CountUp\Service\WordService;
 use Exception;
 use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,12 +24,16 @@ class GameController extends AbstractController
     public function __construct(
         private PuzzleServiceInterface $puzzleService,
         private ChallengeServiceInterface $challengeService,
+        private WordService $wordService,
     ){}
 
     public function newChallenge(Request $request): JsonResponse
     {
         // create a brand new puzzle to use with this challenge. (Instead of using an existing one, which could be linked with an existing leaderboard)
         $puzzle = $this->puzzleService->generatePuzzle();
+
+        //TODO remove me OVERRIDE
+        $puzzle->setText("example");
 
         $challenge = $this->challengeService->createChallenge($puzzle);
 
@@ -101,6 +107,7 @@ class GameController extends AbstractController
             throw new Exception("$name is not a string");
         }
 
+        /** @var ?Challenge $challenge */
         $challenge = $request->getSession()->get('challenge');
         if(!($challenge instanceof Challenge)){
             //TODO: What do we do when they don't have a challenge?
@@ -109,10 +116,15 @@ class GameController extends AbstractController
 
         $this->challengeService->completeChallenge($challenge, $name);
 
-        //words you could have done
-        // $this->challengeService->getSolutions($challenge);
+        //final words you could have chosen.
+        $solutions = $this->challengeService->getPossibleSolutions($challenge);
 
-        return $this->successResponse($challenge);
+        return $this->json([
+            'challenge' => $challenge->getPuzzle()->getText(),
+            'used' => $challenge->getUsedChars()->getFrequencies(),
+            'score' => $challenge->getScore(),
+            'solutions' => $solutions,
+        ]);
     }
 
 

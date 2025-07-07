@@ -6,18 +6,23 @@ namespace Acme\CountUp\Service;
 use Acme\CountUp\Entity\Challenge;
 use Acme\CountUp\Entity\CharFrequency;
 use Acme\CountUp\Entity\Puzzle;
+use Acme\CountUp\Entity\Word;
 use Acme\CountUp\Exception\InvalidDictionaryWordException;
 use Acme\CountUp\Exception\NotEnoughCharsException;
+use Acme\CountUp\Repository\WordRepository;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
 use Acme\CountUp\Service\Interface\ChampionServiceInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
+use Doctrine\DBAL\Exception as DBALException;
 use Exception;
+use InvalidArgumentException;
 
 class ChallengeService implements ChallengeServiceInterface
 {
     public function __construct(
         private PuzzleServiceInterface $puzzleService,
-        private ChampionServiceInterface $championService
+        private ChampionServiceInterface $championService,
+        private WordRepository $wordRepo
         )
     {}
 
@@ -57,8 +62,22 @@ class ChallengeService implements ChallengeServiceInterface
         $this->championService->saveChampion($champion);
     }
 
-    public function getSolutions(Challenge $challenge): array{
-        return [];
+    /**
+     * @return array<string> 
+     */
+    public function getPossibleSolutions(Challenge $challenge): array{
+        $charsLeft = $this->getCharsLeft($challenge);
+        
+        /** @var array<string> $words */
+        $words = $this->wordRepo->scrabbleCheck($charsLeft->getFrequencies());
+        return $words;
+    }
+
+    private function getCharsLeft(Challenge $challenge): CharFrequency{
+        $freq = $challenge->getUsedChars();
+        $freq2 = new CharFrequency($challenge->getPuzzle()->getText());
+
+        return $freq2->subtractFrequency($freq);
     }
     
 }
