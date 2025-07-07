@@ -13,6 +13,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class GameController extends AbstractController
 {
@@ -22,8 +23,17 @@ class GameController extends AbstractController
         private WordServiceInterface $wordService,
     ){}
 
-    public function newChallenge(Request $request): JsonResponse
+    private function getCurrentChallenge(SessionInterface $session): Challenge
     {
+        $challenge = $session->get('challenge');
+        if(!$challenge instanceof Challenge){
+            return $this->newChallenge($session);
+        }
+
+        return $challenge;
+    }
+
+    private function newChallenge(SessionInterface $session): Challenge{
         // create a brand new puzzle to use with this challenge. (Instead of using an existing one, which could be exist on the session)
         $puzzle = $this->puzzleService->generatePuzzle();
 
@@ -33,21 +43,24 @@ class GameController extends AbstractController
         $challenge = $this->challengeService->createChallenge($puzzle);
 
         //place the challenge in the session so the user can return later
-        $request->getSession()->set('challenge', $challenge);
+        $session->set('challenge', $challenge);
 
-        // Serialize and return as json.
+        return $challenge;
+    }
+
+    public function newChallengeAction(Request $request): JsonResponse
+    {
+        $challenge = $this->newChallenge($request->getSession());
+
         return $this->successResponse($challenge);
     }
 
     /**
      * Gets the current challenge, or returns a new one if this is a new session.
      */
-    public function getChallenge(Request $request): JsonResponse
+    public function getChallengeAction(Request $request): JsonResponse
     {
-        $challenge = $request->getSession()->get('challenge');
-        if(!($challenge instanceof Challenge)){
-            return $this->newChallenge($request);
-        }
+        $challenge = $this->getCurrentChallenge($request->getSession());
 
         return $this->successResponse($challenge);
     }
@@ -55,21 +68,18 @@ class GameController extends AbstractController
     /**
      * Verifies a submission against a challenge
      */
-    public function submitChallenge(Request $request): JsonResponse
+    public function submitChallengeAction(Request $request): JsonResponse
     {
+        //TODO validation maybe?
         $answer = $request->getPayload()->get('answer');
         if($answer === null || !is_string($answer)){
             throw new Exception("'answer' should be a valid string");
         }
 
-        $challenge = $request->getSession()->get('challenge');
-        if(!($challenge instanceof Challenge)){
-            //TODO: What do we do when they don't have a challenge?
-            return $this->json(['error' => "You don't have an existing challenge, please return with a valid game session token."]);
-        }
+        $challenge = $this->getCurrentChallenge($request->getSession());
 
         if(!$this->wordService->isValidDictionaryWord($answer)){
-            return $this->errorReponse($challenge, "The provided word is not a valid word in the english dictionary");
+            return $this->errorReponse("The provided word is not a valid word in the english dictionary", $challenge);
         }
 
         $this->puzzleService->canRemoveCharsFromPuzzle($challenge->getPuzzle(), new CharFrequency($answer));
@@ -77,7 +87,7 @@ class GameController extends AbstractController
         try{
             $challenge = $this->challengeService->submitChallenge($challenge, $answer);
         } catch(NotEnoughCharsException $e){
-            return $this->errorReponse($challenge, "Not enough characters available to use that word");
+            return $this->errorReponse("Not enough characters available to use that word", $challenge);
         }
 
         $request->getSession()->set('challenge', $challenge);
@@ -92,7 +102,7 @@ class GameController extends AbstractController
     /**
      * Completes the challenge for the current user
      */
-    public function completeChallenge(Request $request): JsonResponse
+    public function completeChallengeAction(Request $request): JsonResponse
     {
         $name = $request->getPayload()->get('name');
         if($name === null){
@@ -136,13 +146,18 @@ class GameController extends AbstractController
             'score' => $challenge->getScore()
         ]);
     }
-    private function errorReponse(Challenge $challenge, string $message): JsonResponse{
+    private function errorReponse(string $message, ?Challenge $challenge = null): JsonResponse{
+        if($challenge === null){
+            return $this->json([
+                'error' => $message
+            ], 400);
+        }
         return $this->json([
             'error' => $message,
             'challenge' => $challenge->getPuzzle()->getText(),
             'used' => $challenge->getUsedChars()->getFrequencies(),
             'score' => $challenge->getScore()
-        ]);
+        ], 400);
     }
     // private function leaderboardResponse(): JsonResponse{
 
