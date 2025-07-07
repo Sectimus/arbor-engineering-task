@@ -4,7 +4,9 @@ declare(strict_types=1);
 //TODO move this to models
 namespace Acme\CountUp\Entity;
 
-class CharFrequency
+use Acme\CountUp\Service\Interface\FrequencyInterface;
+
+class CharFrequency implements FrequencyInterface
 {
     /** @var array<string, int> */
     protected array $frequencies;
@@ -58,11 +60,10 @@ class CharFrequency
     }
 
     /**
-     * Subtracts one frequency array with another, returning only the values that were not matched.
-     * @param CharFrequency $charFrequency The frequency to subtract
+     * @inheritDoc
      */
-    public function addFrequency(CharFrequency $charFrequency): self{
-        $addFrequencies = $charFrequency->getFrequencies();
+    public function addFrequency(FrequencyInterface $frequency): self{
+        $addFrequencies = $frequency->getFrequencies();
         $keysToSearch = array_keys($addFrequencies);
         for ($i=0; $i < count($keysToSearch); $i++) {
             $currentChar = $keysToSearch[$i];
@@ -79,17 +80,16 @@ class CharFrequency
     }
 
     /**
-     * Subtracts one frequency array with another, returning only the values that were not matched.
-     * @param CharFrequency $charFrequency The frequency to subtract
+     * @inheritDoc
      */
-    public function subtractFrequency(CharFrequency $charFrequency): self{
+    public function subtractFrequency(FrequencyInterface $charFrequency): self{
         $subtractFrequencies = $charFrequency->getFrequencies();
         $keysToSearch = array_keys($subtractFrequencies);
         for ($i=0; $i < count($keysToSearch); $i++) { 
             $currentChar = $keysToSearch[$i];
 
             if(!array_key_exists($currentChar, $this->frequencies)){
-                // $this->frequencies[$currentChar] = $subtractFrequencies[$currentChar]; //TODO maybe remove?
+                $this->frequencies[$currentChar] = $subtractFrequencies[$currentChar];
                 continue;
             }
 
