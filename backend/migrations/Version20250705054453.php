@@ -19,20 +19,25 @@ final class Version20250705054453 extends AbstractMigration
     */
     public function up(Schema $schema): void
     {
-        // TODO create an index against the words
         $this->addSql(<<<'SQL'
             CREATE TABLE word (
                 id INT NOT NULL, 
                 term VARCHAR(45) NOT NULL, 
                 lang VARCHAR(2) NOT NULL, 
-                PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+                PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+        SQL);
+
+        // We will be searching this field quite a lot!
+        $this->addSql(<<<'SQL'
+            CREATE INDEX term_idx
+            ON word(term);
         SQL);
     }
 
     public function down(Schema $schema): void
     {
         $this->addSql(<<<'SQL'
-            DROP TABLE word
+            DROP TABLE word;
         SQL);
     }
 }
