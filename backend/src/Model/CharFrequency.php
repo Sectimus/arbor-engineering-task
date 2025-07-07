@@ -60,22 +60,42 @@ class CharFrequency
     /**
      * Subtracts one frequency array with another, returning only the values that were not matched.
      * @param CharFrequency $charFrequency The frequency to subtract
-     * @return array<char, int> Any left over characters after the subtraction
      */
-    public function subtractFrequency(CharFrequency $charFrequency): array{
-        $result = $this->frequencies;
+    public function addFrequency(CharFrequency $charFrequency): self{
+        $addFrequencies = $charFrequency->getFrequencies();
+        $keysToSearch = array_keys($addFrequencies);
+        for ($i=0; $i < count($keysToSearch); $i++) {
+            $currentChar = $keysToSearch[$i];
+
+            if(!array_key_exists($currentChar, $this->frequencies)){
+                $this->frequencies[$currentChar] = $addFrequencies[$currentChar];
+                continue;
+            }
+            $this->frequencies[$currentChar] += $addFrequencies[$currentChar];
+        }
+
+
+        return $this;
+    }
+
+    /**
+     * Subtracts one frequency array with another, returning only the values that were not matched.
+     * @param CharFrequency $charFrequency The frequency to subtract
+     */
+    public function subtractFrequency(CharFrequency $charFrequency): self{
         $subtractFrequencies = $charFrequency->getFrequencies();
         $keysToSearch = array_keys($subtractFrequencies);
         for ($i=0; $i < count($keysToSearch); $i++) { 
             $currentChar = $keysToSearch[$i];
 
-            if(!array_key_exists($currentChar, $result)){
-                // No point subtracting from zero
+            if(!array_key_exists($currentChar, $this->frequencies)){
+                // $this->frequencies[$currentChar] = $subtractFrequencies[$currentChar]; //TODO maybe remove?
                 continue;
             }
 
-            $result[$currentChar] -= $subtractFrequencies[$currentChar];
+            $this->frequencies[$currentChar] -= $subtractFrequencies[$currentChar];
         }
-        return $result;
+
+        return $this;
     }
 }

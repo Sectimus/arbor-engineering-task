@@ -45,34 +45,13 @@ class PuzzleService implements PuzzleServiceInterface{
         return $randomString;
     }
 
-    public function charsAreWithinPuzzle(Puzzle $puzzle, string $chars): bool{
+    public function canRemoveCharsFromPuzzle(Puzzle $puzzle, CharFrequency $charFrequency): bool{
         $puzzleFreq = new CharFrequency($puzzle->getText());
-        $charFreq = new CharFrequency($chars);
-        $freqDelta = $puzzleFreq->subtractFrequency($charFreq);
+        $puzzleFreq->subtractFrequency($charFrequency);
 
         // Check, if any character is less than 0 on frequency (if it is, then it's been used more than is allowed)
-        $test = array_any($freqDelta, fn($hz) => $hz < 0);
-
-
-
-
-        // foreach ($charsInAnswer as $char => $frequencey) {
-
-        //     if($frequencey > 0 && isset($totalChars[$char]) && $totalChars[$char] > 0){
-        //         $frequenceyDelta = $totalChars[$char] - $frequencey;
-
-        //         if($frequenceyDelta < 0){
-        //             // Not enough instances of the correct character are available.
-        //             return false;
-        //         } else{
-        //             //There are enough instance of this char, move on to checking the next char.
-        //             continue;
-        //         } 
-        //     } else{
-        //         return false;
-        //     }
-        // }
-
-        return true;
+        $tooManyCharacters = array_any($puzzleFreq->getFrequencies(), fn($hz) => $hz < 0);
+        
+        return !$tooManyCharacters;
     }
 }

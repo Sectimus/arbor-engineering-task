@@ -6,21 +6,12 @@ namespace Acme\CountUp\Entity;
 
 final class Challenge
 {
-    private ?int $id = null;
+    private CharFrequency $usedChars;
 
-    private Puzzle $puzzle;
-
-    private string $usedChars = '';
-
-    public function getId(): ?int
+    public function __construct(private Puzzle $puzzle)
     {
-        return $this->id;
-    }
-
-    protected function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
+        //Start off a challenge with no used chars
+        $this->usedChars = new CharFrequency("");
     }
 
     public function getPuzzle(): Puzzle
@@ -34,14 +25,19 @@ final class Challenge
         return $this;
     }
 
-    public function addUsedChars(string $chars): self
+    public function addUsedChars(CharFrequency $chars): self
     {
-        $this->usedChars .= $chars;
-        
+        $this->usedChars->addFrequency($chars);
         return $this;
     }
 
-    public function getUsedChars(): string
+    protected function setUsedChars(CharFrequency $usedChars): self
+    {
+        $this->usedChars = $usedChars;
+        return $this;
+    }
+
+    public function getUsedChars(): CharFrequency
     {
         return $this->usedChars;
     }

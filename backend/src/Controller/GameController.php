@@ -84,7 +84,6 @@ class GameController extends AbstractController
             return $this->json(['error' => "Some of the characters in ($answer) do not exist in the challenge text: ($challengeText)."]);
         }
 
-        $challenge->addUsedChars($answer);
         $request->getSession()->set('challenge', $challenge);
 
         // if(!$this->challengeService->isChallengeSolvable($challenge)){
@@ -99,10 +98,9 @@ class GameController extends AbstractController
      * @return array<mixed>
      */
     private function normalizeChallenge(Challenge $challenge): array{
-        $usedChars = new CharFrequency($challenge->getUsedChars());
         return [
             'challenge' => $challenge->getPuzzle()->getText(),
-            'used' => $usedChars->getFrequencies()
+            'used' => $challenge->getUsedChars()->getFrequencies()
         ];
     }
 
