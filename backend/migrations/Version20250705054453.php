@@ -19,11 +19,12 @@ final class Version20250705054453 extends AbstractMigration
     */
     public function up(Schema $schema): void
     {
+        // We are not going to autoincrement the id here, as we need it to be sequential with no gaps, IDs are managed application side.
         $this->addSql(<<<'SQL'
             CREATE TABLE word (
                 id INT NOT NULL, 
-                term VARCHAR(45) NOT NULL, 
-                PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+                term VARCHAR(45) NOT NULL UNIQUE, 
+                PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         SQL);
 
         // We will be searching this field quite a lot!
