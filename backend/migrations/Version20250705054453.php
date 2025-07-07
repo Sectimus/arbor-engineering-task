@@ -23,7 +23,6 @@ final class Version20250705054453 extends AbstractMigration
             CREATE TABLE word (
                 id INT NOT NULL, 
                 term VARCHAR(45) NOT NULL, 
-                lang VARCHAR(2) NOT NULL, 
                 PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
         SQL);
 

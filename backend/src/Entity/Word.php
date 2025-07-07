@@ -15,9 +15,6 @@ final class Word
     #[ORM\Column(length: 45)]
     private string $term;
 
-    #[ORM\Column(length: 2)]
-    private string $lang;
-
     public function getId(): int
     {
         return $this->id;
@@ -37,17 +34,6 @@ final class Word
     public function setTerm(string $term): self
     {
         $this->term = $term;
-        return $this;
-    }
-
-    public function getLang(): string
-    {
-        return $this->lang;
-    }
-
-    public function setLang(string $lang): self
-    {
-        $this->lang = $lang;
         return $this;
     }
 }

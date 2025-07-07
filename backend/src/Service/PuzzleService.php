@@ -29,7 +29,7 @@ class PuzzleService implements PuzzleServiceInterface{
         $randomPadding = $this->generateRandomPadding($requiredPaddingLength);
         $randomString = str_shuffle(strtolower($randomPadding . $seed->getTerm()));
         
-        $puzzle = new Puzzle()->setLang('en')->setText($randomString);
+        $puzzle = new Puzzle()->setText($randomString);
 
         return $puzzle;
     }

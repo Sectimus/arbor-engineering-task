@@ -29,7 +29,7 @@ class DictionaryFixtures extends Fixture
                 if (!empty($term)) {
                     $word = new Word();
                     // We manually set the ID to ensure a range from 1->MAX is complete without any gaps for *cheap* random selection.
-                    $word->setId($i)->setLang('en')->setTerm($term);
+                    $word->setId($i)->setTerm($term);
                     $manager->persist($word);
                     
                     $count++;
