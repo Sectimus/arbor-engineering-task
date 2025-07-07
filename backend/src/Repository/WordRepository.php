@@ -5,7 +5,7 @@ namespace Acme\CountUp\Repository;
 use Acme\CountUp\Entity\Champion;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Entity\Word;
-use Acme\CountUp\Service\Interface\FrequencyInterface;
+use Acme\CountUp\Model\Interface\FrequencyInterface;
 use BadMethodCallException;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\AbstractQuery;
@@ -35,7 +35,7 @@ class WordRepository extends EntityRepository
         }
     }
 
-    //TODO fix docblock
+    //TODO fix docblock (ALSO fix this method to use the new performant system instead of REPLACE)
     // /**
     //  * Returns a list of words that contain the provided character frequencies. Kind of like scrabble!
     //  * This is useful for finding out which words could be spelled with the remaining letters (needs to match EVERY letter)
@@ -61,7 +61,8 @@ class WordRepository extends EntityRepository
         }
 
         if (empty($conditions)) {
-            throw new InvalidArgumentException('Frequencies array cannot be empty');
+            // There are no anagrams when there are no term conditions (perhaps there are no letters left?)
+            return [];
         }
 
         $whereClause = implode(' AND ', $conditions);
@@ -85,6 +86,10 @@ class WordRepository extends EntityRepository
         $count = $qb->select('COUNT(w.id)')
             ->getQuery()
             ->getSingleScalarResult();
+
+        if($count < 2){
+            throw new RuntimeException('Database has less than 2 word entries, cannot select a random word. Please update the database with more word records.');
+        }
 
         $randomOffset = rand(0, $count - 1);
 

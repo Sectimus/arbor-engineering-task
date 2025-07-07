@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service\Interface;
 
-use Acme\CountUp\Model\CharFrequency;
+use Acme\CountUp\Model\Interface\FrequencyInterface;
 use Acme\CountUp\Model\Puzzle;
 
 interface PuzzleServiceInterface

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Acme\CountUp\Service\Interface;
+namespace Acme\CountUp\Model\Interface;
 
 interface FrequencyInterface
 {

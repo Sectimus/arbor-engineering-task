@@ -6,7 +6,7 @@ namespace Acme\CountUp\Service;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Model\Puzzle;
 use Acme\CountUp\Repository\WordRepository;
-use Acme\CountUp\Service\Interface\FrequencyInterface;
+use Acme\CountUp\Model\Interface\FrequencyInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 
 class PuzzleService implements PuzzleServiceInterface{

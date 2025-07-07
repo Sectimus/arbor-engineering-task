@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Model;
 
-use Acme\CountUp\Service\Interface\FrequencyInterface;
+use Acme\CountUp\Model\Interface\FrequencyInterface;
 
 class CharFrequency implements FrequencyInterface
 {
