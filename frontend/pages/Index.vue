@@ -12,22 +12,15 @@ console.log('Index component mounted');
 
 // Load the challenge when the component mounts
 onMounted(async () => {
-    //await challengeStore.loadChallenge(true) // If we want to ensure the data is always fresh (Handle multi-user?)
-    return await challengeStore.loadChallenge();
+    await challengeStore.getChallenge();
 });
-
-const handleDelete = async (challenge) => {
-    try {
-        await challengeStore.removeChallenge(challenge);
-    } catch (error) {
-        console.error('Failed to delete challenge:', error);
-    }
-};
 </script>
 
 <template>
     <h1>CountUp</h1>
-    <Stage>
+    <Stage 
+        :challenge="challengeStore.challenge">
+    >
     </Stage>
     </hr>
     <router-link to="/challenge/new">Add New Challenge</router-link>

@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import { createWebHistory, createRouter } from 'vue-router'
-import 'simpledotcss/simple.min.css';
+// import 'simpledotcss/simple.min.css'; TODO maybe??
 
 import Index from './pages/Index.vue';
 import ChallengeEdit from './pages/ChallengeEdit.vue';

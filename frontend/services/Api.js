@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default(url='/api') => {
+export default(url='http://localhost:8080/api') => {
     const api = axios.create({
         baseURL: url,
         timeout: 10000, // 10 seconds timeout
@@ -12,7 +12,6 @@ export default(url='/api') => {
     // Add a request interceptor
     api.interceptors.request.use(
         (config) => {
-            // You can add custom logic here before the request is sent
             return config;
         },
         (error) => {
@@ -23,7 +22,7 @@ export default(url='/api') => {
     // Add a response interceptor
     api.interceptors.response.use(
         (response) => {
-            return response.data; // Return only the data part of the response
+            return response.data; // Be aware we return only the data part of the response
         },
         (error) => {
             return Promise.reject(error);

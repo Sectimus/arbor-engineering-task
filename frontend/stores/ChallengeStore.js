@@ -8,16 +8,11 @@ export const useChallengeStore = defineStore('challenge', () => {
     const error = ref(null);
     const loadedFromApi = ref(false);
 
-    async function getChallenge(id) {
-        await loadChallenge(); // If our challengelist is not loaded yet
+    async function getChallenge() {
+        await loadChallenge(); // If our challenge is not loaded yet
+        //TODO challenge being null?
 
-        let challenge = challenge.value.find(challenge => challenge.id === id) || null;
-
-        if (!challenge) {
-            throw new Error(`Challenge with id ${id} not found`);
-        }
-
-        return challenge;
+        return await challenge.value;
     }
 
     async function submitChallenge(challenge) {
@@ -34,7 +29,7 @@ export const useChallengeStore = defineStore('challenge', () => {
     
         try {
             isLoading.value = true;
-            challenge.value = await ChallengeApi.getchallenge();
+            challenge.value = await ChallengeApi.getChallenge();
         } catch (err) {
             error.value = err.message;
             console.error("Error fetching challenge:", err);
@@ -51,7 +46,6 @@ export const useChallengeStore = defineStore('challenge', () => {
         error,
         // actions
         getChallenge,
-        loadChallenge,
         submitChallenge,
         completeChallenge
     };

@@ -127,10 +127,12 @@ class GameController extends AbstractController
         $solutions = $this->wordService->findAnagrams($freq->toString());
 
         return $this->json([
-            'challenge' => $challenge->getPuzzle()->getText(),
-            'used' => $challenge->getUsedChars()->getFrequencies(),
-            'score' => $challenge->getScore(),
-            'solutions' => $solutions,
+            'data' => [
+                'puzzle' => $challenge->getPuzzle()->getText(),
+                'used' => $challenge->getUsedChars()->getFrequencies(),
+                'score' => $challenge->getScore(),
+                'solutions' => $solutions,
+            ]
         ]);
     }
 
@@ -141,9 +143,11 @@ class GameController extends AbstractController
     private function successResponse(Challenge $challenge): JsonResponse{
 
         return $this->json([
-            'challenge' => $challenge->getPuzzle()->getText(),
-            'used' => $challenge->getUsedChars()->getFrequencies(),
-            'score' => $challenge->getScore()
+            'data' => [
+                'puzzle' => $challenge->getPuzzle()->getText(),
+                'used' => $challenge->getUsedChars()->getFrequencies(),
+                'score' => $challenge->getScore(),
+            ]
         ]);
     }
     private function errorReponse(string $message, ?Challenge $challenge = null): JsonResponse{
@@ -154,9 +158,11 @@ class GameController extends AbstractController
         }
         return $this->json([
             'error' => $message,
-            'challenge' => $challenge->getPuzzle()->getText(),
-            'used' => $challenge->getUsedChars()->getFrequencies(),
-            'score' => $challenge->getScore()
+            'data' => [
+                'puzzle' => $challenge->getPuzzle()->getText(),
+                'used' => $challenge->getUsedChars()->getFrequencies(),
+                'score' => $challenge->getScore()
+            ]
         ], 400);
     }
     // private function leaderboardResponse(): JsonResponse{

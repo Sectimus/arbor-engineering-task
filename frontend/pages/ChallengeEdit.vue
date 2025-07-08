@@ -2,7 +2,6 @@
     import { ref, onMounted } from 'vue';
 
     import { useRoute } from 'vue-router';
-    import EntityFormEditor from '../components/EntityForm/EntityFormEditor.vue';
     import FieldError from '../components/EntityForm/FieldError.vue';
     import { useChallengeStore } from '../stores/ChallengeStore.js';
     import { useRouter } from 'vue-router';
@@ -42,7 +41,7 @@
 
 <template>
     <div>
-        <EntityFormEditor
+        <!-- <EntityFormEditor
         :entity="formData"
         :errors="errors"
         previousPageTitle="challenge list"
@@ -75,6 +74,6 @@
                     </div>
                 </fieldset>
             </template>
-        </EntityFormEditor>
+        </EntityFormEditor> -->
     </div>
 </template>
