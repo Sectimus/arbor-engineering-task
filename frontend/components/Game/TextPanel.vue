@@ -1,11 +1,16 @@
 
 <script setup>
+import { computed } from 'vue';
 
-defineProps({
-    letter: {
+let props = defineProps({
+    challengeLetter: {
         type: String,
         required: true,
     },
+    used: {
+        type: Boolean,
+        required: true
+    }
     // previousPageTitle: {
     //     type: String,
     //     default: null,
@@ -16,16 +21,30 @@ defineProps({
     // },
 });
 
+let challengeLetters = computed(() => {
+    const puzzleText = props.challenge.puzzle ?? '?';
+    return puzzleText.toUpperCase().split('');
+})
+
 // defineEmits(['save']);
 </script>
 
 <template>
     <div class="centered-container">
-        <div class="boxed-panel">
-            <h1 class="character">{{letter ?? '?'}}</h1>
+        <div
+            class="boxed-panel"
+            :class="{ 'used-outline': used }"
+        >
+            <h1 class="character">{{challengeLetter ?? '?'}}</h1>
         </div>
     </div>
 </template>
+
+<style scoped>
+.used-outline {
+    border-color: red !important;
+}
+</style>
 
 
 <style scoped>
@@ -39,8 +58,8 @@ defineProps({
     border: 2px solid #666666;
     border-radius: 8px;
     padding: 1rem;
-    max-width: 100px;
-    max-height: 100px;
+    width: 30;
+    height: 30;
 }
 
 .character {

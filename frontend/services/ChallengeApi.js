@@ -39,9 +39,14 @@ export default {
         }
     },
 
-    submitChallenge: async (answer) => {
+    submitChallengeAnswer: async (answer) => {
         try {
-            await Api().post('/challenge');
+            //TODO pull the form data directly
+            var bodyFormData = new FormData();
+            bodyFormData.append('answer', answer);
+
+            const response = await Api().post('/challenge', bodyFormData);
+            return response.data;
         } catch (error) {
             if (error.response?.data) {
                 // Handle validation errors from Symfony

@@ -15,8 +15,10 @@ export const useChallengeStore = defineStore('challenge', () => {
         return await challenge.value;
     }
 
-    async function submitChallenge(challenge) {
-        alert("submit");
+    async function submitChallengeAnswer(answer) {
+        challenge.value = await ChallengeApi.submitChallengeAnswer(answer);
+        let val = await challenge.value
+        let asd = 2;
     }
 
     async function completeChallenge(challenge) {
@@ -46,7 +48,7 @@ export const useChallengeStore = defineStore('challenge', () => {
         error,
         // actions
         getChallenge,
-        submitChallenge,
+        submitChallengeAnswer,
         completeChallenge
     };
 });

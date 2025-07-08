@@ -15,18 +15,22 @@ console.log('Index component mounted');
 onMounted(async () => {
     await challengeStore.getChallenge();
 });
+
+function handleSubmitAnswer(answer){
+    //find out if it was a correct answer
+    challengeStore.submitChallengeAnswer(answer);
+}
 </script>
 
 <template>
     <div>
-        <div class="d-flex justify-content-between">
-            <span>asd</span>
-            <h1>CountUp</h1>
-            <span>1237</span>
+        <div class="d-flex justify-content-center">
+            <h1>{{ challengeStore.challenge.score }}</h1>
         </div>
         <div cols="1">
             <Stage 
-                :challenge="challengeStore.challenge">
+                :challenge="challengeStore.challenge"
+                @submitAnswer="(answer) => handleSubmitAnswer(answer)"
             >
             </Stage>
         </div>
