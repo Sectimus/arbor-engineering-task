@@ -38,7 +38,7 @@ class GameController extends AbstractController
         $puzzle = $this->puzzleService->generatePuzzle();
 
         //TODO remove me OVERRIDE
-        // $puzzle->setText("suonuuipvginvbewylts");
+        $puzzle->setText("snackzoops");
 
         $challenge = $this->challengeService->createChallenge($puzzle);
 
@@ -127,7 +127,9 @@ class GameController extends AbstractController
         // Find out what characters are left (so that we can search for anagrams)
         $freq = new CharFrequency($challenge->getPuzzle()->getText());
         $freq->subtractFrequency($challenge->getUsedChars());
-        $solutions = $this->wordService->findAnagrams($freq->toString());
+
+        //TODO this should perhaps be in the wordService instead.
+        $solutions = $this->challengeService->getSolutions($challenge);
 
         return $this->json([
             'data' => [
@@ -144,12 +146,14 @@ class GameController extends AbstractController
      * TODO move these into a dedicated normalizer/serializer setup
      */
     private function successResponse(Challenge $challenge): JsonResponse{
+        $isSolvable = count($this->challengeService->getSolutions($challenge)) > 0;
 
         return $this->json([
             'data' => [
                 'puzzle' => $challenge->getPuzzle()->getText(),
                 'used' => $challenge->getUsedChars()->getFrequencies(),
                 'score' => $challenge->getScore(),
+                'isSolvable' => $isSolvable,
             ]
         ]);
     }

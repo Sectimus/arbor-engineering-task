@@ -12,8 +12,9 @@ class CharFrequency implements FrequencyInterface
 
     public function __construct(
         protected string $inputString, 
+        bool $padding = false
     ){
-        $this->frequencies = self::createArrayFromString($inputString);
+        $this->frequencies = self::createArrayFromString($inputString, $padding);
     }
 
     public function toString(): string { 
@@ -51,16 +52,29 @@ class CharFrequency implements FrequencyInterface
     public function setInputString(string $inputString): self
     {
         $this->inputString = $inputString;
-        $this->frequencies = self::createArrayFromString($inputString);
+        $this->frequencies = self::createArrayFromString($inputString, false);
         return $this;
     }
+
+    //TODO move
+    private const ALPHABET = [
+        'a','b','c','d','e','f','g','h','i',
+        'j','k','l','m','n','o','p','q','r',
+        's','t','u','v','w','x','y','z'
+    ];
 
     /**
      * Creates a frequency array which is keyed by each unique character in the string.
      * @return array<string, int>
      */
-    private static function createArrayFromString(string $string): array{
+    private static function createArrayFromString(string $string, bool $padding): array{
         $charFrequenciesArray = [];
+        if($padding){
+            foreach (self::ALPHABET as $letter) {
+                $charFrequenciesArray[$letter] = 0;
+            }
+        }
+
         foreach (count_chars($string, 1) as $i => $val) {
             $char = chr($i);
             $charFrequenciesArray[$char] = $val;

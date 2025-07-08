@@ -21,8 +21,20 @@ use InvalidArgumentException;
 class ChallengeService implements ChallengeServiceInterface
 {
     public function __construct(
-        private ChampionServiceInterface $championService
+        private ChampionServiceInterface $championService,
+        private WordRepository $wordRepository
     ){}
+
+    /**
+     * @inheritDoc
+     */
+    public function getSolutions(Challenge $challenge): array{
+        $freq = new CharFrequency($challenge->getPuzzle()->getText())
+                                        ->subtractFrequency($challenge->getUsedChars());
+        
+
+        return $this->wordRepository->findWordTermByCharFrequency($freq);
+    }
 
     public function createChallenge(Puzzle $puzzle): Challenge { 
         $challenge = new Challenge($puzzle);

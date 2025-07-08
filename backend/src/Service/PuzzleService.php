@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
+use Acme\CountUp\Entity\Challenge;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Model\Puzzle;
 use Acme\CountUp\Repository\WordRepository;
@@ -28,15 +29,7 @@ class PuzzleService implements PuzzleServiceInterface{
         return $word !== null;
     }
 
-    /**
-     * @return array<string>
-     */
-    public function getSolutions(FrequencyInterface $frequencyInterface): array{
-        return $this->wordRepository->findWordTermByCharFrequency($frequencyInterface);
-    }
-
     public function generatePuzzle(): Puzzle { 
-        $temp = $this->getSolutions(new CharFrequency('lard'));
         $seed = $this->wordRepository->getRandomWord();
 
         $requiredPaddingLength = self::PUZZLE_LENGTH - strlen($seed->getTerm());

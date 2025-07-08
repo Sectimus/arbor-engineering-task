@@ -51,8 +51,8 @@ class WordRepository extends EntityRepository
         $parameters = [];
         $searchLength = 0;
 
-        $frequencies = new CharFrequency($string)->getFrequencies();
-        foreach ($frequencies as $char => $count) {
+        $charFreq = new CharFrequency($string)->getFrequencies();
+        foreach ($charFreq as $char => $count) {
             $conditions[] = "(LENGTH(term) - LENGTH(REPLACE(term, ?, ''))) >= ?";
             $parameters[] = $char;
             $parameters[] = $count;
@@ -105,15 +105,18 @@ class WordRepository extends EntityRepository
      * @return array<string>
      */
     public function findWordTermByCharFrequency(FrequencyInterface $charFreq): array{
+        $paddedCharFreq = new CharFrequency('', true)->addFrequency($charFreq);
         $qb = $this->createQueryBuilder('w');
 
         $qb->select('w.term');
 
         $maxWordLength = 0;
-        foreach ($charFreq->getFrequencies() as $char => $freq) {
+        foreach ($paddedCharFreq->getFrequencies() as $char => $freq) {
             $qb->andWhere($qb->expr()->lte('w.l_'.$char, $freq));
             $maxWordLength += $freq;
         }
+
+        $qb->andWhere($qb->expr()->lte('w.term_length', $maxWordLength));
         
         $qb->setMaxResults(10);
 
