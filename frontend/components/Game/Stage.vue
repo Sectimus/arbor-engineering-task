@@ -39,9 +39,14 @@ let challengeLetters = computed(() => {
 const emit = defineEmits(['submitAnswer', 'complete']);
 
 const answer = ref('');
+const name = ref('');
 
 function handleSubmit() {
     emit('submitAnswer', answer.value);
+}
+
+function handleComplete() {
+    emit('complete', name.value);
 }
 </script>
 
@@ -53,7 +58,27 @@ function handleSubmit() {
                 :used="challenge.used && obj.i <= challenge.used[obj.char] || false"
             />
             <FlashyForm v-model="answer" @submit="handleSubmit"/>
-            <button @click="$emit('complete')" class="btn btn-outline-success" type="submit" id="btn-submit">Complete</button>
+
+
+            <form 
+                @submit.prevent="handleComplete" 
+                class="d-flex flex-wrap justify-content-center input-group mb-3" 
+                :class="{'d-none': challenge.isSolvable }"
+            >
+                <input 
+                    v-model="name"
+                    type="text" 
+                    class="form-control-lg text-center text-uppercase" 
+                    placeholder="Your name..." aria-label="Your name..." aria-describedby="btn-complete"
+                />
+                <button 
+                    class="btn btn-outline-success" 
+                    type="submit" 
+                    id="btn-complete">
+                        Complete
+                </button>
+            </form>
+            
         </div>
     </div>
 </template>

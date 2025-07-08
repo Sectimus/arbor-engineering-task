@@ -6,14 +6,14 @@ import 'bootstrap/dist/css/bootstrap.css'
 
 
 import Index from './pages/Index.vue';
-import ChallengeEdit from './pages/ChallengeEdit.vue';
-import ChallengeCreate from './pages/ChallengeCreate.vue';
+// import ChallengeEdit from './pages/ChallengeEdit.vue';
+// import ChallengeCreate from './pages/ChallengeCreate.vue';
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 const routes = [
     { path: '/', component: Index },
-    { path: '/challenge/new', component: ChallengeCreate },
-    { path: '/challenge/edit/:id', component: ChallengeEdit },
+    // { path: '/challenge/new', component: ChallengeCreate },
+    // { path: '/challenge/edit/:id', component: ChallengeEdit },
 ];
 
 const router = createRouter({

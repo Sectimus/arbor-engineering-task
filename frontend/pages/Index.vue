@@ -20,8 +20,9 @@ function handleSubmitAnswer(answer){
     challengeStore.submitChallengeAnswer(answer);
 }
 
-function handleComplete(answer){
-    challengeStore.completeChallenge();
+function handleComplete(name){
+    debugger;
+    challengeStore.completeChallenge(name);
 }
 </script>
 

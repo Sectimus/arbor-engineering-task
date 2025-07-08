@@ -62,11 +62,11 @@ export default {
         }
     },
 
-    completeChallenge: async (answer) => {
+    completeChallenge: async (name) => {
         try {
             //TODO pull the form data directly
             var bodyFormData = new FormData();
-            bodyFormData.append('name', 'amelia');
+            bodyFormData.append('name', name);
 
             const response = await Api().post('/challenge/complete', bodyFormData);
             return response.data;
