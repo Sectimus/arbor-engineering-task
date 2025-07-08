@@ -31,14 +31,19 @@ function handleComplete(name){
             <h1>{{ challengeStore.challenge.score }}</h1>
         </div>
         <div>
-            <Stage 
-                :challenge="challengeStore.challenge"
-                @submitAnswer="handleSubmitAnswer"
-                @complete="handleComplete"
-            >
-            </Stage>
+            <div class="pb-5">
+                <Stage 
+                    :challenge="challengeStore.challenge"
+                    @submitAnswer="handleSubmitAnswer"
+                    @complete="handleComplete"
+                >
+                </Stage>
+            </div>
+            
             <div class="d-flex justify-content-center">
-                <router-link to="/leaderboard">View Leaderboard</router-link> 
+                <div class="position-fixed pt-0 bottom-0 w-100 bg-white py-3 d-flex justify-content-center">
+                    <router-link to="/leaderboard">View Leaderboard</router-link>
+                </div>
             </div>
         </div>
     </div>

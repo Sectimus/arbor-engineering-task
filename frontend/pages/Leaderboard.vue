@@ -10,7 +10,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100">
+    <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100 pb-4">
         <h1 class="mb-4 text-center">Leaderboard</h1>
         <table class="table table-light table-striped border border-primary" style="max-width: 600px; width: 100%;">
             <thead>
@@ -28,6 +28,8 @@ onMounted(async () => {
                 </tr>
             </tbody>
         </table>
-        <router-link to="/">Return to game</router-link> 
+        <div class="position-fixed pt-0 bottom-0 w-100 bg-white py-3 d-flex justify-content-center">
+            <router-link to="/">Return to game</router-link> 
+        </div>
     </div>
 </template>

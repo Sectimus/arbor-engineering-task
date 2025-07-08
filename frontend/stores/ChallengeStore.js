@@ -4,6 +4,7 @@ import ChallengeApi from '../services/ChallengeApi';
 
 export const useChallengeStore = defineStore('challenge', () => {
     const challenge = ref([]);
+    const solutions = ref([]);
     const isLoading = ref(false);
     const error = ref(null);
     const loadedFromApi = ref(false);
@@ -12,7 +13,6 @@ export const useChallengeStore = defineStore('challenge', () => {
         try {
             isLoading.value = true;
             challenge.value = await ChallengeApi.newChallenge();
-            
         } catch (err) {
             error.value = err.message;
             console.error("Error fetching challenge:", err);
@@ -38,7 +38,7 @@ export const useChallengeStore = defineStore('challenge', () => {
     }
 
     async function completeChallenge(name) {
-        await ChallengeApi.completeChallenge(name);
+        solutions.value = await ChallengeApi.completeChallenge(name);
     }
 
     async function loadChallenge() {
@@ -63,6 +63,7 @@ export const useChallengeStore = defineStore('challenge', () => {
         challenge,
         isLoading,
         error,
+        solutions,
         // actions
         newChallenge,
         getChallenge,

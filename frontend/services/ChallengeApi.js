@@ -69,7 +69,7 @@ export default {
             bodyFormData.append('name', name);
 
             const response = await Api().post('/challenge/complete', bodyFormData);
-            return response.data;
+            return response.data.solutions;
         } catch (error) {
             throw {
                 message: 'Failed to complete challenge',

@@ -3,6 +3,8 @@
 import { computed, ref } from 'vue';
 import TextPanel from './TextPanel.vue';
 import FlashyForm from '../Input/FlashyForm.vue';
+import { useChallengeStore } from '../../stores/ChallengeStore.js';
+const challengeStore = useChallengeStore();
 
 const props = defineProps({
     challenge: {
@@ -15,7 +17,9 @@ const props = defineProps({
     },
 });
 
-//every letter in the challenge, mapped by it's character index. Ex. [{'char': 'b', 'i': 1}, {'char': 'a', 'i': 1}, {'char': 'a', 'i': 2}, {'char': 'c', 'i': 1},] 
+
+
+//every letter in the challenge, mapped by it's character index. Ex. (baac) [{'char': 'b', 'i': 1}, {'char': 'a', 'i': 1}, {'char': 'a', 'i': 2}, {'char': 'c', 'i': 1},] 
 let challengeLetters = computed(() => {
     const arr = [];
     const puzzleText = props.challenge.puzzle ?? '?';
@@ -40,13 +44,20 @@ const emit = defineEmits(['submitAnswer', 'complete']);
 
 const answer = ref('');
 const name = ref('');
+const complete = ref(false);
 
 function handleSubmit() {
-    emit('submitAnswer', answer.value);
+    if(!complete.value){
+        emit('submitAnswer', answer.value);
+    }
 }
 
 function handleComplete() {
-    emit('complete', name.value);
+    if(!complete.value){
+        emit('complete', answer.value);
+    }
+    
+    complete.value = true;
 }
 </script>
 
@@ -62,23 +73,25 @@ function handleComplete() {
             <form @submit.prevent="handleSubmit" 
                 class="d-flex flex-wrap justify-content-center input-group mb-3 flex-column flex-sm-row">
                 <button 
-                  @click="handleClick" 
-                  class="btn btn-outline-secondary mb-2 mb-sm-0 me-0" 
-                  type="button" 
-                  id="btn-new">
-                  <i class="bi bi-arrow-clockwise fs-1"></i>
+                    @click="handleClick" 
+                    class="btn btn-outline-secondary mb-2 mb-sm-0 me-0" 
+                    type="button" 
+                    id="btn-new"
+                >
+                    <i class="bi bi-arrow-clockwise fs-1"></i>
                 </button>
                 <input 
                   v-model="answer"
                   type="text" 
                   class="form-control-lg text-center text-uppercase fs-2 mb-2 mb-sm-0 me-0" 
                   placeholder="Word..." aria-label="Word..." aria-describedby="btn-submit"
+                  :disabled="!challenge.isSolvable || complete"
                 />
                 <button 
                   class="btn btn-outline-primary" 
                   type="submit" 
                   id="btn-submit"
-                  :disabled="!challenge.isSolvable">
+                  :disabled="!challenge.isSolvable || complete">
                     Guess
                 </button>
             </form>
@@ -93,14 +106,31 @@ function handleComplete() {
                     type="text" 
                     class="form-control-lg text-center text-uppercase" 
                     placeholder="Your name..." aria-label="Your name..." aria-describedby="btn-complete"
+                    :disabled="complete"
                 />
                 <button 
                     class="btn btn-outline-success" 
                     type="submit" 
-                    id="btn-complete">
+                    id="btn-complete"
+                    :disabled="complete">
                         Complete
                 </button>
             </form>
+
+            <div v-if="complete">
+                <div v-if="challengeStore.solutions.length > 0">
+                    <h2 class="text-danger">Possible solutions:</h2>
+                    <ul class="list-group list-group-flush">
+                        <li v-for="solution in challengeStore.solutions" class="list-group-item text-centre">
+                            
+                            <p class="text-center mb-0">{{ solution.term }}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div v-else>
+                    <h2 class="text-success">You found all possible solutions!</h2>
+                </div>
+            </div>
         </div>
     </div>
 </template>
