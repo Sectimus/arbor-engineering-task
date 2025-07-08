@@ -10,11 +10,11 @@ export const useLeaderboardStore = defineStore('leaderboard', () => {
 
     async function getChampions() {
         await loadLeaderboard(); // ALWAYS update the leaderboard, regardless
-        if(!leaderboard.value){
+        if(!champions.value){
             throw "Problem retrieving leaderboard"
         }
 
-        return await leaderboard.value;
+        return await champions.value;
     }
 
     async function loadLeaderboard() {    

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useLeaderboardStore } from '../stores/LeaderboardStore.js';
 
 const leaderboardStore = useLeaderboardStore();
@@ -8,6 +8,15 @@ const leaderboardStore = useLeaderboardStore();
 onMounted(async () => {
     await leaderboardStore.getChampions();
 });
+
+const sortedLeaderboard = computed(() => {
+    return leaderboardStore.champions.sort((a, b) => b.score - a.score );
+});
+
+
+function sortedArray() {
+    return this.champion.sort((a, b) => a.name - b.name );
+}
 </script>
 <template>
     <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100 pb-4">
@@ -21,8 +30,8 @@ onMounted(async () => {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(champion, i,) in leaderboardStore.champions">
-                    <th scope="row">{{ i+1 }}</th>
+                <tr v-for="(champion, i) in sortedLeaderboard">
+                    <td>{{ i+1 }}</td>
                     <td>{{ champion.name }}</td>
                     <td>{{ champion.score }}</td>
                 </tr>
