@@ -58,12 +58,4 @@ class ChallengeService implements ChallengeServiceInterface
         $this->championService->addScoreToChampion($champion, $challenge->getScore());
         $this->championService->saveChampion($champion);
     }
-
-    // private function getCharsLeft(Challenge $challenge): CharFrequency{
-    //     $freq = $challenge->getUsedChars();
-    //     $freq2 = new CharFrequency($challenge->getPuzzle()->getText());
-
-    //     return $freq2->subtractFrequency($freq);
-    // }
-    
 }

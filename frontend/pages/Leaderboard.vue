@@ -1,29 +1,13 @@
 <script setup>
 import { onMounted } from 'vue';
-import { useChallengeStore } from '../stores/ChallengeStore.js';
-import { useRouter } from 'vue-router';
-import Stage from '../components/Game/Stage.vue';
+import { useLeaderboardStore } from '../stores/LeaderboardStore.js';
 
-const challengeStore = useChallengeStore();
-const router = useRouter();
-console.log('Index component mounted');
-
-
+const leaderboardStore = useLeaderboardStore();
 
 // Load the challenge when the component mounts
 onMounted(async () => {
-    await challengeStore.getChallenge();
+    await leaderboardStore.getChampions();
 });
-
-function handleSubmitAnswer(answer){
-    //find out if it was a correct answer
-    challengeStore.submitChallengeAnswer(answer);
-}
-
-function handleComplete(name){
-    debugger;
-    challengeStore.completeChallenge(name);
-}
 </script>
 <template>
     <div class="container d-flex flex-column align-items-center justify-content-center min-vh-100">
@@ -37,20 +21,10 @@ function handleComplete(name){
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>13</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>10</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>7</td>
+                <tr v-for="(champion, i,) in leaderboardStore.champions">
+                    <th scope="row">{{ i+1 }}</th>
+                    <td>{{ champion.name }}</td>
+                    <td>{{ champion.score }}</td>
                 </tr>
             </tbody>
         </table>

@@ -7,6 +7,7 @@ use Acme\CountUp\Entity\Challenge;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Exception\NotEnoughCharsException;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
+use Acme\CountUp\Service\Interface\ChampionServiceInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 use Acme\CountUp\Service\Interface\WordServiceInterface;
 use Exception;
@@ -21,6 +22,7 @@ class GameController extends AbstractController
         private PuzzleServiceInterface $puzzleService,
         private ChallengeServiceInterface $challengeService,
         private WordServiceInterface $wordService,
+        private ChampionServiceInterface $championService,
     ){}
 
     private function getCurrentChallenge(SessionInterface $session): Challenge
@@ -172,12 +174,20 @@ class GameController extends AbstractController
             ]
         ], 400);
     }
-    // private function leaderboardResponse(): JsonResponse{
 
-    //     return $this->json([
-    //         'challenge' => $challenge->getPuzzle()->getText(),
-    //         'used' => $challenge->getUsedChars()->getFrequencies(),
-    //         'score' => $challenge->getScore()
-    //     ]);
-    // }
+    public function getChampionsAction(): JsonResponse{
+        $arr = [];
+        $champs = $this->championService->getChampions();
+
+        foreach ($champs as $champ) {
+            $arr[] = [
+                'name' => $champ->getName(),
+                'score' => $champ->getScore()
+            ];
+        }
+
+        return $this->json([
+            'data' => $arr
+        ]);
+    }
 }

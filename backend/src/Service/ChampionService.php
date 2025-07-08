@@ -54,4 +54,11 @@ class ChampionService implements ChampionServiceInterface
     public function addScoreToChampion(Champion $champion, int $score): void{
         $champion->addScore($score);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getChampions(): array{
+        return $this->championRepository->findAll();
+    }
 }

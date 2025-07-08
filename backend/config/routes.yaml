@@ -23,3 +23,8 @@ api_challenge_complete:
     path: /api/challenge/complete
     controller: Acme\CountUp\Controller\GameController::completeChallengeAction
     methods: [POST]
+
+api_view_leaderboard:
+    path: /api/leaderboard
+    controller: Acme\CountUp\Controller\GameController::getChampionsAction
+    methods: [GET]

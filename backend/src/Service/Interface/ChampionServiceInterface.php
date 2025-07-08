@@ -22,4 +22,10 @@ interface ChampionServiceInterface
      * Increment the score of this champion by `$score` amount.
      */
     public function addScoreToChampion(Champion $champion, int $score): void;
+
+    /**
+     * Return all champions to display on a leaderboard.
+     * @return array<Champion>
+     */
+    public function getChampions(): array;
 }

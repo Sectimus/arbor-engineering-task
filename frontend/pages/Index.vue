@@ -21,7 +21,6 @@ function handleSubmitAnswer(answer){
 }
 
 function handleComplete(name){
-    debugger;
     challengeStore.completeChallenge(name);
 }
 </script>
