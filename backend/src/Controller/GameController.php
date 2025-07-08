@@ -38,7 +38,7 @@ class GameController extends AbstractController
         $puzzle = $this->puzzleService->generatePuzzle();
 
         //TODO remove me OVERRIDE
-        // $puzzle->setText("example");
+        $puzzle->setText("suonuuipvginvbewylts");
 
         $challenge = $this->challengeService->createChallenge($puzzle);
 
@@ -70,7 +70,7 @@ class GameController extends AbstractController
      */
     public function submitChallengeAction(Request $request): JsonResponse
     {
-        //TODO validation maybe?
+        //TODO validation maybe? (Also ensure input is alphanumeric and not got any punctuation or special chars)
         $answer = $request->getPayload()->get('answer');
         if($answer === null || !is_string($answer)){
             throw new Exception("'answer' should be a valid string");
@@ -82,13 +82,16 @@ class GameController extends AbstractController
             return $this->errorReponse("The provided word is not a valid word in the english dictionary", $challenge);
         }
 
-        $this->puzzleService->canRemoveCharsFromPuzzle($challenge->getPuzzle(), new CharFrequency($answer));
+        if(!$this->puzzleService->areCharactersInPuzzle($challenge->getPuzzle(), new CharFrequency($answer))){
+            return $this->errorReponse("Please ensure all your characters exist in the puzzle", $challenge);
+        };
 
-        try{
-            $challenge = $this->challengeService->submitChallenge($challenge, $answer);
-        } catch(NotEnoughCharsException $e){
+        $totalUsedChars = new CharFrequency($answer)->addFrequency($challenge->getUsedChars());
+        if (!$this->puzzleService->canRemoveCharsFromPuzzle($challenge->getPuzzle(), $totalUsedChars)){
             return $this->errorReponse("Not enough characters available to use that word", $challenge);
         }
+
+        $challenge = $this->challengeService->submitChallenge($challenge, $answer);
 
         $request->getSession()->set('challenge', $challenge);
 

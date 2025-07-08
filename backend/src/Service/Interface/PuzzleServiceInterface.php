@@ -12,5 +12,7 @@ interface PuzzleServiceInterface
 
     public function canRemoveCharsFromPuzzle(Puzzle $puzzle, FrequencyInterface $chars): bool;
 
+    public function areCharactersInPuzzle(Puzzle $puzzle, FrequencyInterface $chars): bool;
+
     public function isValidDictionaryWord(string $word): bool;
 }

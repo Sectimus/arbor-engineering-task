@@ -16,6 +16,12 @@ class PuzzleService implements PuzzleServiceInterface{
     )
     {}
 
+    public function areCharactersInPuzzle(Puzzle $puzzle, FrequencyInterface $freq): bool {
+        $puzzleFreq = new CharFrequency($puzzle->getText());
+
+        return $puzzleFreq->containsFrequency($freq);
+     }
+
     public function isValidDictionaryWord(string $word): bool { 
         $word = $this->wordRepository->findOneBy(['term' => $word]);
 
@@ -60,7 +66,7 @@ class PuzzleService implements PuzzleServiceInterface{
         $puzzleFreq->subtractFrequency($charFrequency);
 
         // Check, if any character is less than 0 on frequency (if it is, then it's been used more than is allowed)
-        $tooManyCharacters = array_any($puzzleFreq->getFrequencies(), fn($hz) => $hz < 0);
+        $tooManyCharacters = array_any($puzzleFreq->getFrequencies(), fn($freq) => $freq < 0);
         
         return !$tooManyCharacters;
     }

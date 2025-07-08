@@ -71,8 +71,8 @@ class CharFrequency implements FrequencyInterface
     /**
      * @inheritDoc
      */
-    public function addFrequency(FrequencyInterface $frequency): self{
-        $addFrequencies = $frequency->getFrequencies();
+    public function addFrequency(FrequencyInterface $charFrequency): self{
+        $addFrequencies = $charFrequency->getFrequencies();
         $keysToSearch = array_keys($addFrequencies);
         for ($i=0; $i < count($keysToSearch); $i++) {
             $currentChar = $keysToSearch[$i];
@@ -106,5 +106,23 @@ class CharFrequency implements FrequencyInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function containsFrequency(FrequencyInterface $charFrequency): bool { 
+        $subFrequencies = $charFrequency->getFrequencies();
+        $keysToSearch = array_keys($subFrequencies);
+        for ($i=0; $i < count($keysToSearch); $i++) { 
+            $currentChar = $keysToSearch[$i];
+
+
+            if(!array_key_exists($currentChar, $this->frequencies)){
+                return false;
+            }
+        }
+
+        return true;
     }
 }

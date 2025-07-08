@@ -21,7 +21,6 @@ use InvalidArgumentException;
 class ChallengeService implements ChallengeServiceInterface
 {
     public function __construct(
-        private PuzzleServiceInterface $puzzleService,
         private ChampionServiceInterface $championService
     ){}
 
@@ -34,19 +33,6 @@ class ChallengeService implements ChallengeServiceInterface
         $freq = new CharFrequency($answer);
         // Ensure that we are using a sum of all previous answers in our tally.
         $freq->addFrequency($challenge->getUsedChars());
-
-        $puzzle = $this->puzzleService->canRemoveCharsFromPuzzle($challenge->getPuzzle(), $freq);
-        if($puzzle === false){
-            // Could not remove the chars from the puzzle as it would use a character more than allowed.
-            throw new NotEnoughCharsException();
-        }
-
-        // Ensure it is a valid word we were provided.
-        $isValidWord = $this->puzzleService->isValidDictionaryWord($answer);
-        if(!$isValidWord){
-            // The provided answer is not a real dictionary word.
-            throw new InvalidDictionaryWordException();
-        }
 
         // We consider the challenge answered correctly at this point. (there could still be more answers remaining)
         $challenge->addUsedChars(new CharFrequency($answer));

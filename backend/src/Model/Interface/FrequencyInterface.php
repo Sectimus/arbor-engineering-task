@@ -18,6 +18,11 @@ interface FrequencyInterface
     public function addFrequency(self $frequency): self;
 
     /**
+     * Returns true if the passed frequency is a complete subset
+     */
+    public function containsFrequency(self $frequency): bool;
+
+    /**
      * Subtracts one frequency array with another
      * @param self $frequency The frequency to subtract
      */
