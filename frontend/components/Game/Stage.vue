@@ -101,7 +101,6 @@ function handleComplete() {
                         Complete
                 </button>
             </form>
-            
         </div>
     </div>
 </template>

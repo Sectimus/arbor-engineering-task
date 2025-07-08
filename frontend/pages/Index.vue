@@ -31,15 +31,17 @@ function handleComplete(name){
         <div class="d-flex justify-content-center">
             <h1>{{ challengeStore.challenge.score }}</h1>
         </div>
-        <div cols="1">
+        <div>
             <Stage 
                 :challenge="challengeStore.challenge"
                 @submitAnswer="handleSubmitAnswer"
                 @complete="handleComplete"
             >
             </Stage>
+            <div class="d-flex justify-content-center">
+                <router-link to="/leaderboard">View Leaderboard</router-link> 
+            </div>
         </div>
     </div>
-    <!-- </hr>
-    <router-link to="/challenge/new">Add New Challenge</router-link> -->
+    
 </template>
