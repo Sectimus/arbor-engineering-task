@@ -4,7 +4,6 @@ import { useChallengeStore } from '../stores/ChallengeStore.js';
 import { useRouter } from 'vue-router';
 import Stage from '../components/Game/Stage.vue';
 
-
 const challengeStore = useChallengeStore();
 const router = useRouter();
 console.log('Index component mounted');
@@ -20,6 +19,11 @@ function handleSubmitAnswer(answer){
     //find out if it was a correct answer
     challengeStore.submitChallengeAnswer(answer);
 }
+
+function handleNewChallenge(answer){
+    //find out if it was a correct answer
+    challengeStore.submitChallengeAnswer(answer);
+}
 </script>
 
 <template>
@@ -30,7 +34,7 @@ function handleSubmitAnswer(answer){
         <div cols="1">
             <Stage 
                 :challenge="challengeStore.challenge"
-                @submitAnswer="(answer) => handleSubmitAnswer(answer)"
+                @submitAnswer="handleSubmitAnswer"
             >
             </Stage>
         </div>
