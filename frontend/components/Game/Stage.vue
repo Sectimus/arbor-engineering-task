@@ -54,7 +54,7 @@ function handleSubmit() {
 
 function handleComplete() {
     if(!complete.value){
-        emit('complete', answer.value);
+        emit('complete', name.value);
     }
     
     complete.value = true;
