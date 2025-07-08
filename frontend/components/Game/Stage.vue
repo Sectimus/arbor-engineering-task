@@ -28,14 +28,16 @@ let letters = computed(() => {
 </script>
 
 <template>
-    <div class="centered-container" style="min-width: 300px;">
-        <th>{{ challenge.puzzle ?? 'loading' }}</th>
-        <TextPanel v-for="letter in letters"
-            :letter="letter" 
-        />
-        <slot name="content" >
-            <p>[Entity Form Content]</p>
-        </slot>
+    <div style="min-width: 300px;">
+        <div class="d-flex flex-wrap justify-content-center">
+            <TextPanel v-for="letter in letters" class="mx-1"
+                :letter="letter" 
+            />
+        </div>
+        <div class="d-flex flex-wrap justify-content-center input-group mb-3">
+            <input type="text" class="form-control-lg" placeholder="Guess..." aria-label="Guess..." aria-describedby="button-addon2">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
+        </div>
     </div>
 </template>
 
