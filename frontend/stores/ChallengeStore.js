@@ -34,9 +34,9 @@ export const useChallengeStore = defineStore('challenge', () => {
     }
 
     async function submitChallengeAnswer(answer) {
-        debugger;
         try{
             challenge.value = await ChallengeApi.submitChallengeAnswer(answer);
+            error.value = null;
         }catch(err){
             error.value = err.message
         }
