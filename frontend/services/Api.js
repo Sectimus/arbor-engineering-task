@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export default(url='http://localhost:8080/api') => {
+export default(url='/api') => {
     const api = axios.create({
         baseURL: url,
         timeout: 10000, // 10 seconds timeout
