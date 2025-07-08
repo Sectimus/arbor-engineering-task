@@ -53,11 +53,11 @@ function handleSubmit() {
 }
 
 function handleComplete() {
-    if(!complete.value){
+    if(!challengeStore.complete.value){
         emit('complete', name.value);
     }
     
-    complete.value = true;
+    challengeStore.complete = true;
 }
 
 function handleReset() {
@@ -89,13 +89,13 @@ function handleReset() {
                   type="text" 
                   class="form-control-lg text-center text-uppercase fs-2 mb-2 mb-sm-0 me-0" 
                   placeholder="Word..." aria-label="Word..." aria-describedby="btn-submit"
-                  :disabled="!challenge.isSolvable || complete"
+                  :disabled="!challenge.isSolvable || challengeStore.complete"
                 />
                 <button 
                   class="btn btn-outline-primary" 
                   type="submit" 
                   id="btn-submit"
-                  :disabled="!challenge.isSolvable || complete">
+                  :disabled="!challenge.isSolvable || challengeStore.complete">
                     Guess
                 </button>
                 <div v-if="challengeStore.error" class="invalid-feedback d-block text-center">
@@ -114,18 +114,18 @@ function handleReset() {
                     type="text" 
                     class="form-control-lg text-center text-uppercase" 
                     placeholder="Your name..." aria-label="Your name..." aria-describedby="btn-complete"
-                    :disabled="complete"
+                    :disabled="challengeStore.complete"
                 />
                 <button 
                     class="btn btn-outline-success" 
                     type="submit" 
                     id="btn-complete"
-                    :disabled="complete">
+                    :disabled="challengeStore.complete">
                         Complete
                 </button>
             </form>
 
-            <div v-if="complete">
+            <div v-if="challengeStore.complete">
                 <div v-if="challengeStore.solutions.length > 0">
                     <h2 class="text-danger">Possible solutions:</h2>
                     <ul class="list-group list-group-flush">
