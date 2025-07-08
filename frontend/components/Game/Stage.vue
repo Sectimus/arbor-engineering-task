@@ -57,13 +57,29 @@ function handleComplete() {
                 :challengeLetter="obj.char" 
                 :used="challenge.used && obj.i <= challenge.used[obj.char] || false"
             />
-            <FlashyForm v-model="answer" @submit="handleSubmit"/>
-
+            
+            
+            <form @submit.prevent="handleSubmit" class="d-flex flex-wrap justify-content-center input-group mb-3">
+                <button @click="handleClick" class="btn btn-outline-secondary" type="button" id="btn-new"><i class="bi bi-arrow-clockwise fs-1"></i></button>
+                <input 
+                    v-model="answer"
+                    type="text" 
+                    class="form-control-lg text-center text-uppercase fs-2" 
+                    placeholder="Word..." aria-label="Word..." aria-describedby="btn-submit"
+                />
+                <button 
+                    class="btn btn-outline-primary" 
+                    type="submit" 
+                    id="btn-submit"
+                    :disabled="!challenge.isSolvable">
+                        Guess
+                    </button>
+            </form>
 
             <form 
                 @submit.prevent="handleComplete" 
                 class="d-flex flex-wrap justify-content-center input-group mb-3" 
-                :class="{'d-none': challenge.isSolvable }"
+                :class="{'d-none': challenge.score == 0 }"
             >
                 <input 
                     v-model="name"
