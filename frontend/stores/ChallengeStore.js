@@ -8,30 +8,47 @@ export const useChallengeStore = defineStore('challenge', () => {
     const error = ref(null);
     const loadedFromApi = ref(false);
 
+    async function newChallenge() {
+        try {
+            isLoading.value = true;
+            challenge.value = await ChallengeApi.newChallenge();
+            
+        } catch (err) {
+            error.value = err.message;
+            console.error("Error fetching challenge:", err);
+        } finally {
+            isLoading.value = false;
+            loadedFromApi.value = true;
+        }
+
+        return await challenge.value;
+    }
+
     async function getChallenge() {
         await loadChallenge(); // If our challenge is not loaded yet
-        //TODO challenge being null?
+        if(!challenge.value){
+            throw "Problem retrieving challenge"
+        }
 
         return await challenge.value;
     }
 
     async function submitChallengeAnswer(answer) {
         challenge.value = await ChallengeApi.submitChallengeAnswer(answer);
-        let val = await challenge.value
-        let asd = 2;
     }
 
     async function completeChallenge(challenge) {
         alert("complete");
     }
 
-    async function loadChallenge(fresh = false) {
+    async function loadChallenge() {
         // No need to fetch if challenge are already loaded
-        if (!fresh && loadedFromApi.value) return;
+        if (loadedFromApi.value) return;
     
         try {
             isLoading.value = true;
             challenge.value = await ChallengeApi.getChallenge();
+            
         } catch (err) {
             error.value = err.message;
             console.error("Error fetching challenge:", err);
@@ -47,6 +64,7 @@ export const useChallengeStore = defineStore('challenge', () => {
         isLoading,
         error,
         // actions
+        newChallenge,
         getChallenge,
         submitChallengeAnswer,
         completeChallenge

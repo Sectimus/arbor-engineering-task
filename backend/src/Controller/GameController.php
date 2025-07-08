@@ -38,7 +38,7 @@ class GameController extends AbstractController
         $puzzle = $this->puzzleService->generatePuzzle();
 
         //TODO remove me OVERRIDE
-        $puzzle->setText("suonuuipvginvbewylts");
+        // $puzzle->setText("suonuuipvginvbewylts");
 
         $challenge = $this->challengeService->createChallenge($puzzle);
 

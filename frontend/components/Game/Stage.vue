@@ -48,11 +48,12 @@ function handleSubmit() {
 <template>
     <div style="min-width: 300px;">
         <div class="d-flex flex-wrap justify-content-center">
-            <TextPanel v-for="(v, k) in challengeLetters" class="mx-1"
-                :challengeLetter="v.char" 
-                :used="challenge.used && v.i <= challenge.used[v.char] || false"
+            <TextPanel v-for="obj in challengeLetters" class="mx-1"
+                :challengeLetter="obj.char" 
+                :used="challenge.used && obj.i <= challenge.used[obj.char] || false"
             />
             <FlashyForm v-model="answer" @submit="handleSubmit"/>
+            <button class="btn btn-outline-success" type="submit" id="btn-submit">Complete</button>
         </div>
     </div>
 </template>
