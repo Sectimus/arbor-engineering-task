@@ -59,6 +59,10 @@ function handleComplete() {
     
     complete.value = true;
 }
+
+function handleReset() {
+    challengeStore.newChallenge();
+}
 </script>
 
 <template>
@@ -73,7 +77,7 @@ function handleComplete() {
             <form @submit.prevent="handleSubmit" 
                 class="d-flex flex-wrap justify-content-center input-group mb-3 flex-column flex-sm-row">
                 <button 
-                    @click="handleClick" 
+                    @click="handleReset" 
                     class="btn btn-outline-secondary mb-2 mb-sm-0 me-0" 
                     type="button" 
                     id="btn-new"
