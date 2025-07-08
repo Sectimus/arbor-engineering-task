@@ -49,15 +49,12 @@ export default {
             return response.data;
         } catch (error) {
             if (error.response?.data) {
-                // Handle validation errors from Symfony
                 throw {
-                    message: error.response.data.message || 'Validation failed',
-                    errors: error.response.data.errors || {}
+                    message: error.response.data.error || 'Validation failed',
                 };
             }
             throw {
                 message: 'Failed to submit challenge',
-                errors: {}
             };
         }
     },

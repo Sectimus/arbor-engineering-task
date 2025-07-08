@@ -98,6 +98,9 @@ function handleReset() {
                   :disabled="!challenge.isSolvable || complete">
                     Guess
                 </button>
+                <div v-if="challengeStore.error" class="invalid-feedback d-block text-center">
+                    {{ challengeStore.error }}
+                </div>
             </form>
 
             <form 
@@ -106,6 +109,7 @@ function handleReset() {
                 :class="{'d-none': challenge.score == 0 }"
             >
                 <input 
+                    id="input-guess"
                     v-model="name"
                     type="text" 
                     class="form-control-lg text-center text-uppercase" 
