@@ -37,8 +37,8 @@ export const useChallengeStore = defineStore('challenge', () => {
         challenge.value = await ChallengeApi.submitChallengeAnswer(answer);
     }
 
-    async function completeChallenge(challenge) {
-        alert("complete");
+    async function completeChallenge() {
+        await ChallengeApi.completeChallenge();
     }
 
     async function loadChallenge() {

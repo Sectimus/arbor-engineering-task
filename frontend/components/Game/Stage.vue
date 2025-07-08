@@ -36,7 +36,7 @@ let challengeLetters = computed(() => {
     return arr;
 });
 
-const emit = defineEmits(['submitAnswer']);
+const emit = defineEmits(['submitAnswer', 'complete']);
 
 const answer = ref('');
 
@@ -53,7 +53,7 @@ function handleSubmit() {
                 :used="challenge.used && obj.i <= challenge.used[obj.char] || false"
             />
             <FlashyForm v-model="answer" @submit="handleSubmit"/>
-            <button class="btn btn-outline-success" type="submit" id="btn-submit">Complete</button>
+            <button @click="$emit('complete')" class="btn btn-outline-success" type="submit" id="btn-submit">Complete</button>
         </div>
     </div>
 </template>

@@ -20,9 +20,8 @@ function handleSubmitAnswer(answer){
     challengeStore.submitChallengeAnswer(answer);
 }
 
-function handleNewChallenge(answer){
-    //find out if it was a correct answer
-    challengeStore.submitChallengeAnswer(answer);
+function handleComplete(answer){
+    challengeStore.completeChallenge();
 }
 </script>
 
@@ -35,6 +34,7 @@ function handleNewChallenge(answer){
             <Stage 
                 :challenge="challengeStore.challenge"
                 @submitAnswer="handleSubmitAnswer"
+                @complete="handleComplete"
             >
             </Stage>
         </div>

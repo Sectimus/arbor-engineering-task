@@ -61,4 +61,20 @@ export default {
             };
         }
     },
+
+    completeChallenge: async (answer) => {
+        try {
+            //TODO pull the form data directly
+            var bodyFormData = new FormData();
+            bodyFormData.append('name', 'amelia');
+
+            const response = await Api().post('/challenge/complete', bodyFormData);
+            return response.data;
+        } catch (error) {
+            throw {
+                message: 'Failed to complete challenge',
+                errors: {}
+            };
+        }
+    },
 }

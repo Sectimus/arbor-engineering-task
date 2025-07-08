@@ -11,20 +11,7 @@ let props = defineProps({
         type: Boolean,
         required: true
     }
-    // previousPageTitle: {
-    //     type: String,
-    //     default: null,
-    // },
-    // hasErrors: {
-    //     type: Array,
-    //     default: [],
-    // },
 });
-
-let challengeLetters = computed(() => {
-    const puzzleText = props.challenge.puzzle ?? '?';
-    return puzzleText.toUpperCase().split('');
-})
 
 // defineEmits(['save']);
 </script>
