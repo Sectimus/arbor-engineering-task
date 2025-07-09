@@ -11,16 +11,15 @@ final class Word
 {
     public function __construct(string $term)
     {
-        //YUCK
-        $charFreq = new CharFrequency($term);
         $this->term_length = strlen($term);
     
-        foreach ($charFreq as $char => $frequency) {   
+        foreach (new CharFrequency($term) as $char => $frequency) {   
             $property = 'l_'.$char;
             $this->{$property} = $frequency;
         }
     }
 
+    // Again, we probably don't need the ID field here, the term field is implicitly unique.
     #[ORM\Id]
     #[ORM\Column]
     private int $id;
@@ -50,7 +49,7 @@ final class Word
         return $this;
     }
 
-// YUCK
+    // Forgive me father for I have sinned
     #[ORM\Column]
     private int $term_length=0;
     #[ORM\Column]

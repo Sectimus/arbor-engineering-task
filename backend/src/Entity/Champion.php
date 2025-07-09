@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ChampionRepository::class)]
 final class Champion
 {
+    // We *probably* don't need an ID field on this entity, the name field should suffice
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

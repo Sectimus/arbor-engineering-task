@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service\Interface;
 
-use Acme\CountUp\Entity\Challenge;
+use Acme\CountUp\Model\Challenge;
 use Acme\CountUp\Model\Puzzle;
 use Acme\CountUp\Entity\Word;
 

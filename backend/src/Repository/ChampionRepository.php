@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Acme\CountUp\Repository;
 
@@ -16,6 +17,9 @@ class ChampionRepository extends EntityRepository
         parent::__construct($em, $em->getClassMetadata(Champion::class));
     }
 
+    /**
+     * Persist a champion with the entity manager
+     */
     public function save(Champion $champion, bool $flush = false): void
     {
         $this->getEntityManager()->persist($champion);
@@ -24,15 +28,11 @@ class ChampionRepository extends EntityRepository
         }
     }
 
-    public function delete(Champion $track, bool $flush = false): void
-    {
-        $this->getEntityManager()->remove($track);
-        if ($flush) {
-            $this->getEntityManager()->flush();
-        }
-    }
-
+    /**
+     * Finds a champion by their name, will be converted to lowercase
+     */
     public function findByName(string $name): ?Champion{
+        $name = strtolower($name);
         $qb = $this->createQueryBuilder('c');
         $qb->select('c')
            ->where([$qb->expr()->eq(
@@ -44,29 +44,4 @@ class ChampionRepository extends EntityRepository
         return $qb->getQuery()
             ->getOneOrNullResult();
     }
-
-//    /**
-//     * @return Champion[] Returns an array of Champion objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('t.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Champion
-//    {
-//        return $this->createQueryBuilder('t')
-//            ->andWhere('t.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

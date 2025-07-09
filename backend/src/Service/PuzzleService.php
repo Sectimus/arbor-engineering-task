@@ -3,17 +3,19 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
-use Acme\CountUp\Entity\Challenge;
+use Acme\CountUp\Model\Challenge;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Model\Puzzle;
 use Acme\CountUp\Repository\WordRepository;
 use Acme\CountUp\Model\Interface\FrequencyInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
+use Acme\CountUp\Service\Interface\WordServiceInterface;
 
 class PuzzleService implements PuzzleServiceInterface{
     private const PUZZLE_LENGTH = 10;
     public function __construct(
         private WordRepository $wordRepository,
+        private WordServiceInterface $wordService,
     )
     {}
 

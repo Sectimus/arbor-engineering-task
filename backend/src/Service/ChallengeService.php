@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
-use Acme\CountUp\Entity\Challenge;
+use Acme\CountUp\Model\Challenge;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Model\Puzzle;
 use Acme\CountUp\Entity\Word;
@@ -30,7 +30,7 @@ class ChallengeService implements ChallengeServiceInterface
      */
     public function getSolutions(Challenge $challenge): array{
         $freq = new CharFrequency($challenge->getPuzzle()->getText())
-                                        ->subtractFrequency($challenge->getUsedChars());
+                ->subtractFrequency($challenge->getUsedChars());
         
 
         return $this->wordRepository->findWordTermByCharFrequency($freq);

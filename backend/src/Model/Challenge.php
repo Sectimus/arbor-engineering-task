@@ -1,8 +1,7 @@
 <?php
 declare(strict_types=1);
 
-//TODO move this to models
-namespace Acme\CountUp\Entity;
+namespace Acme\CountUp\Model;
 
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Model\Puzzle;

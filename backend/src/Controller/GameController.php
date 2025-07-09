@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Controller;
 
-use Acme\CountUp\Entity\Challenge;
+use Acme\CountUp\Model\Challenge;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;

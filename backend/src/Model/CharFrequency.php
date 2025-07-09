@@ -9,15 +9,22 @@ use IteratorAggregate;
 use Traversable;
 
 /**
+ * Helper class for performing calculations on the frequency of characters within a string.
  * @implements IteratorAggregate<string, int>
  */
 class CharFrequency implements FrequencyInterface, IteratorAggregate
 {
+    private const ALPHABET = [
+        'a','b','c','d','e','f','g','h','i',
+        'j','k','l','m','n','o','p','q','r',
+        's','t','u','v','w','x','y','z'
+    ];
+
     /** @var array<string, int> */
     protected array $frequencies;
 
     public function __construct(
-        protected string $inputString, 
+        string $inputString, 
         bool $padding = false
     ){
         $this->frequencies = self::createArrayFromString($inputString, $padding);
@@ -53,25 +60,6 @@ class CharFrequency implements FrequencyInterface, IteratorAggregate
         $this->frequencies = $frequencies;
         return $this;
     }
-
-    public function getInputString(): string
-    {
-        return $this->inputString;
-    }
-
-    public function setInputString(string $inputString): self
-    {
-        $this->inputString = $inputString;
-        $this->frequencies = self::createArrayFromString($inputString, false);
-        return $this;
-    }
-
-    //TODO move
-    private const ALPHABET = [
-        'a','b','c','d','e','f','g','h','i',
-        'j','k','l','m','n','o','p','q','r',
-        's','t','u','v','w','x','y','z'
-    ];
 
     /**
      * Creates a frequency array which is keyed by each unique character in the string.
