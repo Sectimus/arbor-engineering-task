@@ -1,8 +1,8 @@
 services:
-  backend:
+  countup_php_fpm:
     container_name: countup_php_fpm
     depends_on:
-      - database
+      - countup_mysql
     build:
       context: ./backend
       dockerfile: dockerfile
@@ -14,7 +14,7 @@ services:
     networks:
       - countup_network
 
-  database:
+  countup_mysql:
     container_name: countup_mysql
     image: mysql:latest
     ports:
@@ -23,37 +23,34 @@ services:
       MYSQL_DATABASE: countup
       MYSQL_USER: countup_user
       MYSQL_PASSWORD: countup_password
-      MYSQL_ROOT_PASSWORD: Tr4ck4ppR0~0tP@55w0rd
+      MYSQL_ROOT_PASSWORD: R0~0tP@55w0rd
     volumes:
       - countup_mysql_data:/var/lib/mysql
     networks:
       - countup_network
 
-  webserver:
+  countup_nginx:
     container_name: countup_nginx
     depends_on:
-      - backend
-      - frontend
+      - countup_php_fpm
+      - countup_node
     image: nginx:latest
     # You may have to override these values if you have privileged ports (<1024) and running docker in rootless mode
     ports:
-      - 80:80
-      - 443:443
+      - 8123:80
       # - 5173:5173 # Vite development server port
     volumes:
       - ./backend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - countup_network
 
-  frontend:
+  countup_node:
     container_name: countup_node
     build:
       context: ./frontend
       dockerfile: dockerfile
     volumes:
       - ./frontend:/var/www/countup
-    ports:
-      - 5173:5173 # Vite development server port
     networks:
       - countup_network
 
