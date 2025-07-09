@@ -5,10 +5,13 @@ namespace Acme\CountUp\Service\Interface;
 
 interface WordServiceInterface
 {
+    /**
+     * Returns `true` if the passed string is a valid word in the dictionary
+     */
     public function isValidDictionaryWord(string $word): bool;
 
     /**
-     * @return array<string>
+     * Returns a true random word.
      */
-    public function findAnagrams(string $word): array;
+    public function getRandomWord(): string;
 }

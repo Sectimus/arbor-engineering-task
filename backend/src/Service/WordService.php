@@ -5,19 +5,27 @@ namespace Acme\CountUp\Service;
 
 use Acme\CountUp\Repository\WordRepository;
 use Acme\CountUp\Service\Interface\WordServiceInterface;
+use RuntimeException;
 
 class WordService implements WordServiceInterface {
     public function __construct(
         private WordRepository $wordRepository
     ){}
 
+    /**
+     * @inheritDoc
+     */
     public function isValidDictionaryWord(string $string): bool { 
         $word = $this->wordRepository->findWordByTerm($string);
         return $word !== null;
     }
 
-    public function findAnagrams(string $word): array{
-        $items = $this->wordRepository->findAnagrams($word);
-        return $items;
+    /**
+     * @inheritDoc
+     */
+    public function getRandomWord(): string{
+        $word = $this->wordRepository->getRandomWord();
+        
+        return $word->getTerm();
     }
 }

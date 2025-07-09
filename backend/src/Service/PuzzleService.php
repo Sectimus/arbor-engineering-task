@@ -3,40 +3,28 @@ declare(strict_types=1);
 
 namespace Acme\CountUp\Service;
 
-use Acme\CountUp\Model\Challenge;
 use Acme\CountUp\Model\CharFrequency;
 use Acme\CountUp\Model\Puzzle;
-use Acme\CountUp\Repository\WordRepository;
 use Acme\CountUp\Model\Interface\FrequencyInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
-use Acme\CountUp\Service\Interface\WordServiceInterface;
 
 class PuzzleService implements PuzzleServiceInterface{
+    // It would be a nice to have if this was an env var somewhere.
     private const PUZZLE_LENGTH = 10;
-    public function __construct(
-        private WordRepository $wordRepository,
-        private WordServiceInterface $wordService,
-    )
+    public function __construct()
     {}
 
     public function areCharactersInPuzzle(Puzzle $puzzle, FrequencyInterface $freq): bool {
         $puzzleFreq = new CharFrequency($puzzle->getText());
 
         return $puzzleFreq->containsFrequency($freq);
-     }
-
-    public function isValidDictionaryWord(string $word): bool { 
-        $word = $this->wordRepository->findOneBy(['term' => $word]);
-
-        return $word !== null;
     }
 
-    public function generatePuzzle(): Puzzle { 
-        $seed = $this->wordRepository->getRandomWord();
+    public function generatePuzzle(string $seed = ''): Puzzle { 
 
-        $requiredPaddingLength = self::PUZZLE_LENGTH - strlen($seed->getTerm());
+        $requiredPaddingLength = self::PUZZLE_LENGTH - strlen($seed);
         $randomPadding = $this->generateRandomPadding($requiredPaddingLength);
-        $randomString = str_shuffle(strtolower($randomPadding . $seed->getTerm()));
+        $randomString = str_shuffle(strtolower($randomPadding . $seed));
         
         $puzzle = new Puzzle()->setText($randomString);
 

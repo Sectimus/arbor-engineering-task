@@ -41,7 +41,8 @@ class GameController extends AbstractController
      * Creates a brand new challenge and sets it on the user session.
      */
     private function newChallenge(SessionInterface $session): Challenge{
-        $puzzle = $this->puzzleService->generatePuzzle();
+        $seedString = $this->wordService->getRandomWord();
+        $puzzle = $this->puzzleService->generatePuzzle($seedString);
 
         //OVERRIDE THE PROMPT DURING DEV
         // $puzzle->setText("dgeftoikbvxua");
