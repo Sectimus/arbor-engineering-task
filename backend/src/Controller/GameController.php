@@ -5,16 +5,16 @@ namespace Acme\CountUp\Controller;
 
 use Acme\CountUp\Entity\Challenge;
 use Acme\CountUp\Model\CharFrequency;
-use Acme\CountUp\Exception\NotEnoughCharsException;
 use Acme\CountUp\Service\Interface\ChallengeServiceInterface;
-use Acme\CountUp\Service\Interface\ChampionServiceInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 use Acme\CountUp\Service\Interface\WordServiceInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class GameController extends AbstractController
 {
@@ -22,9 +22,11 @@ class GameController extends AbstractController
         private PuzzleServiceInterface $puzzleService,
         private ChallengeServiceInterface $challengeService,
         private WordServiceInterface $wordService,
-        private ChampionServiceInterface $championService,
     ){}
 
+    /**
+     * Returns the current challenge for the user session, or creates one if it does not exist.
+     */
     private function getCurrentChallenge(SessionInterface $session): Challenge
     {
         $challenge = $session->get('challenge');
@@ -35,12 +37,14 @@ class GameController extends AbstractController
         return $challenge;
     }
 
+    /**
+     * Creates a brand new challenge and sets it on the user session.
+     */
     private function newChallenge(SessionInterface $session): Challenge{
-        // create a brand new puzzle to use with this challenge. (Instead of using an existing one, which could be exist on the session)
         $puzzle = $this->puzzleService->generatePuzzle();
 
-        //TODO remove me OVERRIDE
-        $puzzle->setText("snackzoops");
+        //OVERRIDE THE PROMPT DURING DEV
+        // $puzzle->setText("dgeftoikbvxua");
 
         $challenge = $this->challengeService->createChallenge($puzzle);
 
@@ -50,6 +54,9 @@ class GameController extends AbstractController
         return $challenge;
     }
 
+    /**
+     * Creates a new challenge and returns a response
+     */
     public function newChallengeAction(Request $request): JsonResponse
     {
         $challenge = $this->newChallenge($request->getSession());
@@ -58,7 +65,7 @@ class GameController extends AbstractController
     }
 
     /**
-     * Gets the current challenge, or returns a new one if this is a new session.
+     * Gets the current challenge, or returns a new one if this is a new session and returns a response.
      */
     public function getChallengeAction(Request $request): JsonResponse
     {
@@ -68,28 +75,46 @@ class GameController extends AbstractController
     }
 
     /**
-     * Verifies a submission against a challenge
+     * Verifies a submission against the current challenge.
      */
-    public function submitChallengeAction(Request $request): JsonResponse
+    public function submitChallengeAction(Request $request, ValidatorInterface $validator): JsonResponse
     {
-        //TODO validation maybe? (Also ensure input is alphanumeric and not got any punctuation or special chars)
         $answer = $request->getPayload()->get('answer');
-        if($answer === null || !is_string($answer)){
-            throw new Exception("'answer' should be a valid string");
+
+        $notBlankConstraint = new NotBlank([
+            'message' => 'Answer must not be blank'
+        ]);
+        $alphaConstraint = new Regex([
+            'pattern' => '/^[a-z]+$/i',
+            'message' => 'Answer must contain only letters, A-Z',
+        ]);
+        $errors = $validator->validate(
+            $answer,
+            [$notBlankConstraint, $alphaConstraint]
+        );
+        /** @var string $answer */
+        
+
+        if ($errors->count()) {
+            // It would be better to return and print all errors at once, but outside of scope for now.
+            return $this->errorReponse((string) $errors[0]->getMessage());
         }
 
+        // If this is the first time that the user has appeared, they probably will get a new challenge here, but oh well! Guess again!
         $challenge = $this->getCurrentChallenge($request->getSession());
 
         if(!$this->wordService->isValidDictionaryWord($answer)){
             return $this->errorReponse("The provided word is not a valid word in the english dictionary", $challenge);
         }
 
-        if(!$this->puzzleService->areCharactersInPuzzle($challenge->getPuzzle(), new CharFrequency($answer))){
+        $answerCharFreq = new CharFrequency($answer);
+
+        if(!$this->puzzleService->areCharactersInPuzzle($challenge->getPuzzle(), $answerCharFreq)){
             return $this->errorReponse("Please ensure all your characters exist in the puzzle", $challenge);
         };
 
-        $totalUsedChars = new CharFrequency($answer)->addFrequency($challenge->getUsedChars());
-        if (!$this->puzzleService->canRemoveCharsFromPuzzle($challenge->getPuzzle(), $totalUsedChars)){
+        $answerCharFreq->addFrequency($challenge->getUsedChars());
+        if (!$this->puzzleService->canRemoveCharsFromPuzzle($challenge->getPuzzle(), $answerCharFreq)){
             return $this->errorReponse("Not enough characters available to use that word", $challenge);
         }
 
@@ -97,41 +122,51 @@ class GameController extends AbstractController
 
         $request->getSession()->set('challenge', $challenge);
 
-        // if(!$this->challengeService->isChallengeSolvable($challenge)){
-        //     //This would be very nice to have, but would be could be very computationally expensive!
-        // };
-
         return $this->successResponse($challenge);
     }
 
     /**
      * Completes the challenge for the current user
      */
-    public function completeChallengeAction(Request $request): JsonResponse
+    public function completeChallengeAction(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $name = $request->getPayload()->get('name');
-        if($name === null){
-            throw new Exception("'name' should be provided but is missing");
+
+        $notBlankConstraint = new NotBlank([
+            'message' => 'Name must not be blank'
+        ]);
+        $alphaConstraint = new Regex([
+            'pattern' => '/^[a-z]+$/i',
+            'message' => 'Name must contain only letters, A-Z',
+        ]);
+        $errors = $validator->validate(
+            $name,
+            [$notBlankConstraint, $alphaConstraint]
+        );
+        if ($errors->count()) {
+            // It would be better to return and print all errors at once, but outside of scope for now.
+            return $this->errorReponse((string) $errors[0]->getMessage());
         }
-        if(!is_string($name)){
-            throw new Exception("$name is not a string");
-        }
+
+        // Ensure the name is lowercase from here on out.
+        $name = strtolower((string) $name);
 
         /** @var ?Challenge $challenge */
         $challenge = $request->getSession()->get('challenge');
         if(!($challenge instanceof Challenge)){
-            //TODO: What do we do when they don't have a challenge?
-            return $this->json(['error' => "You don't have an existing challenge, please return with a valid game session token."]);
+            return $this->errorReponse("You don't have an existing challenge, please return with a valid game session. Visit /api/challenge");
         }
 
         $this->challengeService->completeChallenge($challenge, $name);
 
-        // Find out what characters are left (so that we can search for anagrams)
+        // Find out what characters are left (so that we can search for possible solutions)
         $freq = new CharFrequency($challenge->getPuzzle()->getText());
         $freq->subtractFrequency($challenge->getUsedChars());
 
-        //TODO this should perhaps be in the wordService instead.
         $solutions = $this->challengeService->getSolutions($challenge);
+
+        // Reset the user challenge state
+        $request->getSession()->remove('challenge');
 
         return $this->json([
             'data' => [
@@ -143,9 +178,8 @@ class GameController extends AbstractController
         ]);
     }
 
-
     /**
-     * TODO move these into a dedicated normalizer/serializer setup
+     * These would be much nicer as normalizers for the Challenge instead.
      */
     private function successResponse(Challenge $challenge): JsonResponse{
         $isSolvable = count($this->challengeService->getSolutions($challenge)) > 0;
@@ -173,21 +207,5 @@ class GameController extends AbstractController
                 'score' => $challenge->getScore()
             ]
         ], 400);
-    }
-
-    public function getChampionsAction(): JsonResponse{
-        $arr = [];
-        $champs = $this->championService->getChampions();
-
-        foreach ($champs as $champ) {
-            $arr[] = [
-                'name' => $champ->getName(),
-                'score' => $champ->getScore()
-            ];
-        }
-
-        return $this->json([
-            'data' => $arr
-        ]);
     }
 }

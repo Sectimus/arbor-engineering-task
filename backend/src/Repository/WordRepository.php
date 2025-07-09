@@ -117,6 +117,8 @@ class WordRepository extends EntityRepository
         }
 
         $qb->andWhere($qb->expr()->lte('w.term_length', $maxWordLength));
+
+        // $qb->addOrderBy('w.term_length', 'DESC'); EXPENSIVE!!
         
         $qb->setMaxResults(10);
 

@@ -26,5 +26,5 @@ api_challenge_complete:
 
 api_view_leaderboard:
     path: /api/leaderboard
-    controller: Acme\CountUp\Controller\GameController::getChampionsAction
+    controller: Acme\CountUp\Controller\LeaderboardController::getChampionsAction
     methods: [GET]

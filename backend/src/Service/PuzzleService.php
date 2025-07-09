@@ -11,7 +11,7 @@ use Acme\CountUp\Model\Interface\FrequencyInterface;
 use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 
 class PuzzleService implements PuzzleServiceInterface{
-    private const PUZZLE_LENGTH = 20;
+    private const PUZZLE_LENGTH = 10;
     public function __construct(
         private WordRepository $wordRepository,
     )

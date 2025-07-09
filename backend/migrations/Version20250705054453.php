@@ -9,6 +9,7 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20250705054453 extends AbstractMigration
 {
+    // This is duplcated in a few places throughout, but with reason. We wouldn't want a change in this constant to affect how previous migrations are run.
     private const ALPHABET = [
         'a','b','c','d','e','f','g','h','i',
         'j','k','l','m','n','o','p','q','r',
@@ -34,7 +35,6 @@ final class Version20250705054453 extends AbstractMigration
         }
 
         // We are not going to autoincrement the id here, as we need it to be sequential with no gaps, IDs are managed application side.
-
         $sql = "CREATE TABLE word (id INT NOT NULL, term VARCHAR(45) NOT NULL UNIQUE,";
         $sql .= $letterColumnsSql;
         $sql .= "PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB";
@@ -46,8 +46,6 @@ final class Version20250705054453 extends AbstractMigration
             CREATE INDEX term_idx
             ON word(term);
         SQL);
-
-        var_dump($this->getSql());
     }
 
     public function down(Schema $schema): void
