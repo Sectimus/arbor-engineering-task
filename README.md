@@ -16,7 +16,7 @@ docker compose up -d
 ```sh
 docker exec -it countup_php_fpm php bin/console doctrine:migrations:migrate
 ```
-4. Place your favourite newline-delimited alpha dictionary (alpha = no punctuation or spaces, only using A-Z\) in the `backend/fixtures` directory. (Don't have one? Download one for free here: https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_alpha.txt)
+4. Place your favourite newline-delimited alpha dictionary (alpha = no punctuation or spaces, only using A-Z\) in the `backend/fixtures/alpha_dictionaries/en.txt` directory. (Don't have one? Download one for free here: https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_alpha.txt) 
 5. Import your fancy new fixture into the database! (*beware this is a very computationally expensive task and may require unlocked memory limits, as are also performing calculations on the dictionary to save on compute time later*)
 - On my machine, for the provided dictionary, this took about two minutes, so go make a cup of coffee ☕
 ```sh
@@ -25,7 +25,4 @@ docker exec -it countup_php_fpm php -d memory_limit=-1 bin/console doctrine:fixt
 
 **DONE!**
 
-Visit the frontend at `localhost:8080`, and interact with the backend via `localhost:8080/api`
-
-## Not so easy set up guide
-View the individual `README.md` files in the `backend` and `frontend` directories if setting up manually.
+Visit the frontend at `localhost:8123`, and interact with the backend via `localhost:8123/api`
