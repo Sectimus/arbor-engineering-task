@@ -1,9 +1,10 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import ChallengeApi from '../services/ChallengeApi';
+import { createChallenge } from '../models/Challenge';
 
 export const useChallengeStore = defineStore('challenge', () => {
-    const challenge = ref([]);
+    const challenge = ref(createChallenge());
     const complete = ref(false);
     const solutions = ref([]);
     const isLoading = ref(false);
@@ -13,7 +14,8 @@ export const useChallengeStore = defineStore('challenge', () => {
     async function newChallenge() {
         try {
             isLoading.value = true;
-            challenge.value = await ChallengeApi.newChallenge();
+            const apiData = await ChallengeApi.newChallenge();
+            challenge.value = createChallenge(apiData).value;
         } catch (err) {
             error.value = err.message;
             console.error("Error fetching challenge:", err);
@@ -22,8 +24,6 @@ export const useChallengeStore = defineStore('challenge', () => {
             loadedFromApi.value = true;
             complete.value = false;
         }
-
-        return await challenge.value;
     }
 
     async function getChallenge() {
@@ -50,12 +50,13 @@ export const useChallengeStore = defineStore('challenge', () => {
     }
 
     async function loadChallenge() {
-        // No need to fetch if challenge are already loaded
+        // No need to fetch if challenge is already loaded
         if (loadedFromApi.value) return;
     
         try {
             isLoading.value = true;
-            challenge.value = await ChallengeApi.getChallenge();
+            const apiData = await ChallengeApi.getChallenge();
+            challenge.value = createChallenge(apiData).value;
             complete.value = false;
         } catch (err) {
             error.value = err.message;

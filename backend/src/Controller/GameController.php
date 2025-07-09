@@ -136,13 +136,9 @@ class GameController extends AbstractController
         $notBlankConstraint = new NotBlank([
             'message' => 'Name must not be blank'
         ]);
-        $alphaConstraint = new Regex([
-            'pattern' => '/^[a-z]+$/i',
-            'message' => 'Name must contain only letters, A-Z',
-        ]);
         $errors = $validator->validate(
             $name,
-            [$notBlankConstraint, $alphaConstraint]
+            $notBlankConstraint
         );
         if ($errors->count()) {
             // It would be better to return and print all errors at once, but outside of scope for now.
@@ -190,7 +186,7 @@ class GameController extends AbstractController
                 'puzzle' => $challenge->getPuzzle()->getText(),
                 'used' => $challenge->getUsedChars()->getFrequencies(),
                 'score' => $challenge->getScore(),
-                'isSolvable' => $isSolvable,
+                'solvable' => $isSolvable,
             ]
         ]);
     }

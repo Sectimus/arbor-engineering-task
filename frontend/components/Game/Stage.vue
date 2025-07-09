@@ -2,22 +2,19 @@
 <script setup>
 import { computed, ref } from 'vue';
 import TextPanel from './TextPanel.vue';
-import FlashyForm from '../Input/FlashyForm.vue';
 import { useChallengeStore } from '../../stores/ChallengeStore.js';
+import { createChallenge } from '../../models/Challenge.js';
 const challengeStore = useChallengeStore();
 
 const props = defineProps({
     challenge: {
-        type: [Object],
+        type: Object,
         required: true,
-        default: () => ({
-            puzzle: "???",
-            used: [],
-        }),
+        default: () => createChallenge(),
     },
 });
 
-const emit = defineEmits(['submitAnswer', 'complete']);
+const emit = defineEmits(['submitAnswer', 'complete', 'reset']);
 const answer = ref('');
 const name = ref('');
 const complete = ref(false);
@@ -82,17 +79,18 @@ function handleReset() {
                     <i class="bi bi-arrow-clockwise fs-1"></i>
                 </button>
                 <input 
+                  id="input-guess"
                   v-model="answer"
                   type="text" 
                   class="form-control-lg text-center text-uppercase fs-2 mb-2 mb-sm-0 me-0" 
                   placeholder="Word..." aria-label="Word..." aria-describedby="btn-submit"
-                  :disabled="!challenge.isSolvable || challengeStore.complete"
+                  :disabled="!challenge.solvable || challengeStore.complete"
                 />
                 <button 
                   class="btn btn-outline-primary" 
                   type="submit" 
                   id="btn-submit"
-                  :disabled="!challenge.isSolvable || challengeStore.complete">
+                  :disabled="!challenge.solvable || challengeStore.complete">
                     Guess
                 </button>
                 <div v-if="challengeStore.error" class="invalid-feedback d-block text-center">
@@ -106,7 +104,8 @@ function handleReset() {
                 :class="{'d-none': challenge.score == 0 }"
             >
                 <input 
-                    id="input-guess"
+                    id="input-name"
+                    required
                     v-model="name"
                     type="text" 
                     class="form-control-lg text-center text-uppercase" 

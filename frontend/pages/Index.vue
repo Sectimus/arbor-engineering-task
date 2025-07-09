@@ -11,7 +11,6 @@ onMounted(async () => {
 });
 
 function handleSubmitAnswer(answer){
-    //find out if it was a correct answer
     challengeStore.submitChallengeAnswer(answer);
 }
 
@@ -42,7 +41,7 @@ function handleReset(){
             
             <div class="d-flex justify-content-center">
                 <div class="position-fixed pt-0 bottom-0 w-100 bg-white py-3 d-flex justify-content-center">
-                    <router-link to="/leaderboard">View Leaderboard</router-link>
+                    <router-link to="/leaderboard">View leaderboard</router-link>
                 </div>
             </div>
         </div>
