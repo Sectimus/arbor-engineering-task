@@ -51,8 +51,7 @@ class WordRepository extends EntityRepository
         $parameters = [];
         $searchLength = 0;
 
-        $charFreq = new CharFrequency($string)->getFrequencies();
-        foreach ($charFreq as $char => $count) {
+        foreach (new CharFrequency($string) as $char => $count) {
             $conditions[] = "(LENGTH(term) - LENGTH(REPLACE(term, ?, ''))) >= ?";
             $parameters[] = $char;
             $parameters[] = $count;
@@ -111,7 +110,7 @@ class WordRepository extends EntityRepository
         $qb->select('w.term');
 
         $maxWordLength = 0;
-        foreach ($paddedCharFreq->getFrequencies() as $char => $freq) {
+        foreach ($paddedCharFreq as $char => $freq) {
             $qb->andWhere($qb->expr()->lte('w.l_'.$char, $freq));
             $maxWordLength += $freq;
         }

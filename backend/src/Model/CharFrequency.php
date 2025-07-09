@@ -4,8 +4,14 @@ declare(strict_types=1);
 namespace Acme\CountUp\Model;
 
 use Acme\CountUp\Model\Interface\FrequencyInterface;
+use ArrayIterator;
+use IteratorAggregate;
+use Traversable;
 
-class CharFrequency implements FrequencyInterface
+/**
+ * @implements IteratorAggregate<string, int>
+ */
+class CharFrequency implements FrequencyInterface, IteratorAggregate
 {
     /** @var array<string, int> */
     protected array $frequencies;
@@ -17,9 +23,13 @@ class CharFrequency implements FrequencyInterface
         $this->frequencies = self::createArrayFromString($inputString, $padding);
     }
 
+    public function getIterator(): Traversable { 
+        return new ArrayIterator($this->frequencies);
+    }
+
     public function toString(): string { 
         $freqString = '';
-        foreach ($this->frequencies as $char => $count) {
+        foreach ($this as $char => $count) {
             for ($i=0; $i < $count; $i++) { 
                 $freqString .= $char;
             }

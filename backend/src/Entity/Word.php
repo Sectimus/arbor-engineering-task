@@ -15,7 +15,7 @@ final class Word
         $charFreq = new CharFrequency($term);
         $this->term_length = strlen($term);
     
-        foreach ($charFreq->getFrequencies() as $char => $frequency) {   
+        foreach ($charFreq as $char => $frequency) {   
             $property = 'l_'.$char;
             $this->{$property} = $frequency;
         }
