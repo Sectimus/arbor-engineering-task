@@ -5,7 +5,6 @@ namespace Acme\CountUp\Service;
 
 use Acme\CountUp\Repository\WordRepository;
 use Acme\CountUp\Service\Interface\WordServiceInterface;
-use RuntimeException;
 
 class WordService implements WordServiceInterface {
     public function __construct(

@@ -11,17 +11,20 @@ use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 class PuzzleService implements PuzzleServiceInterface{
     // It would be a nice to have if this was an env var somewhere.
     private const PUZZLE_LENGTH = 10;
-    public function __construct()
-    {}
 
+    /**
+     * @inheritDoc
+     */
     public function areCharactersInPuzzle(Puzzle $puzzle, FrequencyInterface $freq): bool {
         $puzzleFreq = new CharFrequency($puzzle->getText());
 
         return $puzzleFreq->containsFrequency($freq);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function generatePuzzle(string $seed = ''): Puzzle { 
-
         $requiredPaddingLength = self::PUZZLE_LENGTH - strlen($seed);
         $randomPadding = $this->generateRandomPadding($requiredPaddingLength);
         $randomString = str_shuffle(strtolower($randomPadding . $seed));
@@ -31,6 +34,9 @@ class PuzzleService implements PuzzleServiceInterface{
         return $puzzle;
     }
 
+    /**
+     * Generates a random string of a given legnth to use in a puzzle
+     */
     private function generateRandomPadding(int $length): string {
         //TODO duplicate alphabet?
         $characters = 'abcdefghijklmnopqrstuvwxyz';
@@ -44,6 +50,9 @@ class PuzzleService implements PuzzleServiceInterface{
         return $randomString;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function canRemoveCharsFromPuzzle(Puzzle $puzzle, FrequencyInterface $charFrequency): bool{
         $puzzleFreq = new CharFrequency($puzzle->getText());
         $puzzleFreq->subtractFrequency($charFrequency);
