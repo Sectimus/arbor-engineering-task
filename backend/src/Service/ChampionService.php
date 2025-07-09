@@ -9,6 +9,7 @@ use Acme\CountUp\Service\Interface\ChampionServiceInterface;
 
 class ChampionService implements ChampionServiceInterface
 {
+    private const LEADERBOARD_LIMIT = 10;
     public function __construct(
         private ChampionRepository $championRepository
     ){}
@@ -59,6 +60,6 @@ class ChampionService implements ChampionServiceInterface
      * @inheritDoc
      */
     public function getChampions(): array{
-        return $this->championRepository->findAll();
+        return $this->championRepository->findTop(self::LEADERBOARD_LIMIT);
     }
 }

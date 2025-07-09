@@ -10,7 +10,7 @@ use Acme\CountUp\Service\Interface\PuzzleServiceInterface;
 
 class PuzzleService implements PuzzleServiceInterface{
     // It would be a nice to have if this was an env var somewhere.
-    private const PUZZLE_LENGTH = 10;
+    private const PUZZLE_LENGTH = 20;
 
     /**
      * @inheritDoc

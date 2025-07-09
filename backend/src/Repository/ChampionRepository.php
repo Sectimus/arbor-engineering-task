@@ -44,4 +44,18 @@ class ChampionRepository extends EntityRepository
         return $qb->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * Finds the top n champions.
+     * @return array<Champion>
+     */
+    public function findTop(int $n): array{
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('c')
+            ->setMaxResults($n)
+            ->addOrderBy('c.score', 'DESC');
+
+        return $qb->getQuery()
+            ->getResult();
+    }
 }
