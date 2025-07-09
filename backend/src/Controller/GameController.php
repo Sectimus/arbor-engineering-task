@@ -93,7 +93,7 @@ class GameController extends AbstractController
             $answer,
             [$notBlankConstraint, $alphaConstraint]
         );
-        /** @var string $answer */
+        $answer = strtolower((string) $answer);
         
 
         if ($errors->count()) {

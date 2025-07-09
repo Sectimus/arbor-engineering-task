@@ -18,7 +18,6 @@ export const useChallengeStore = defineStore('challenge', () => {
             challenge.value = createChallenge(apiData).value;
         } catch (err) {
             error.value = err.message;
-            console.error("Error fetching challenge:", err);
         } finally {
             isLoading.value = false;
             loadedFromApi.value = true;
@@ -31,8 +30,6 @@ export const useChallengeStore = defineStore('challenge', () => {
         if(!challenge.value){
             throw "Problem retrieving challenge"
         }
-
-        return await challenge.value;
     }
 
     async function submitChallengeAnswer(answer) {
@@ -60,7 +57,6 @@ export const useChallengeStore = defineStore('challenge', () => {
             complete.value = false;
         } catch (err) {
             error.value = err.message;
-            console.error("Error fetching challenge:", err);
         } finally {
             isLoading.value = false;
             loadedFromApi.value = true;

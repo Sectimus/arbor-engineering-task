@@ -7,8 +7,7 @@ export default {
             return response.data;
         } catch (error) {
             throw {
-                message: 'Failed to load champions',
-                errors: {}
+                message: 'Failed to load champions'
             };
         }
     },

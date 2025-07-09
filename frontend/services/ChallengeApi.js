@@ -7,15 +7,12 @@ export default {
             return response.data;
         } catch (error) {
             if (error.response?.data) {
-                // Handle validation errors from Symfony
                 throw {
-                    message: error.response.data.message || 'Validation failed',
-                    errors: error.response.data.errors || {}
+                    message: error.response.data.error || 'Validation failed',
                 };
             }
             throw {
-                message: 'Failed to load challenge',
-                errors: {}
+                message: 'Failed to get challenge',
             };
         }
     },
@@ -26,15 +23,12 @@ export default {
             return response.data;
         } catch (error) {
             if (error.response?.data) {
-                // Handle validation errors from Symfony
                 throw {
-                    message: error.response.data.message || 'Validation failed',
-                    errors: error.response.data.errors || {}
+                    message: error.response.data.error || 'Validation failed',
                 };
             }
             throw {
-                message: 'Failed to create challenge',
-                errors: {}
+                message: 'Failed to submit challenge',
             };
         }
     },
@@ -68,9 +62,13 @@ export default {
             const response = await Api().post('/challenge/complete', bodyFormData);
             return response.data.solutions;
         } catch (error) {
+            if (error.response?.data) {
+                throw {
+                    message: error.response.data.error || 'Validation failed',
+                };
+            }
             throw {
                 message: 'Failed to complete challenge',
-                errors: {}
             };
         }
     },
