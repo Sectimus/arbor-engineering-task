@@ -17,7 +17,10 @@ const props = defineProps({
     },
 });
 
-
+const emit = defineEmits(['submitAnswer', 'complete']);
+const answer = ref('');
+const name = ref('');
+const complete = ref(false);
 
 //every letter in the challenge, mapped by it's character index. Ex. (baac) [{'char': 'b', 'i': 1}, {'char': 'a', 'i': 1}, {'char': 'a', 'i': 2}, {'char': 'c', 'i': 1},] 
 let challengeLetters = computed(() => {
@@ -40,12 +43,6 @@ let challengeLetters = computed(() => {
     return arr;
 });
 
-const emit = defineEmits(['submitAnswer', 'complete']);
-
-const answer = ref('');
-const name = ref('');
-const complete = ref(false);
-
 function handleSubmit() {
     if(!complete.value){
         emit('submitAnswer', answer.value);
@@ -61,7 +58,7 @@ function handleComplete() {
 }
 
 function handleReset() {
-    challengeStore.newChallenge();
+    emit('reset');
 }
 </script>
 

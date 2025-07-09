@@ -1,14 +1,9 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useChallengeStore } from '../stores/ChallengeStore.js';
-import { useRouter } from 'vue-router';
 import Stage from '../components/Game/Stage.vue';
 
 const challengeStore = useChallengeStore();
-const router = useRouter();
-console.log('Index component mounted');
-
-
 
 // Load the challenge when the component mounts
 onMounted(async () => {
@@ -23,6 +18,10 @@ function handleSubmitAnswer(answer){
 function handleComplete(name){
     challengeStore.completeChallenge(name);
 }
+
+function handleReset(){
+    challengeStore.newChallenge();
+}
 </script>
 
 <template>
@@ -36,6 +35,7 @@ function handleComplete(name){
                     :challenge="challengeStore.challenge"
                     @submitAnswer="handleSubmitAnswer"
                     @complete="handleComplete"
+                    @reset="handleReset"
                 >
                 </Stage>
             </div>
